@@ -14,7 +14,7 @@
   (and (> w x -1)
        (> h y -1)))
 
-(defn all-translations [img {:keys [element] :as st-el}]
+(defn all-translations [img st-el]
   (let [img-w (.getWidth  img)
         img-h (.getHeight img)
         img-dim [img-w img-h]
@@ -28,9 +28,7 @@
                         (get-kernel-from-st-el [x y] st-el)
                         (filter (partial is-in-bounds? img-dim))
                         (map (partial get-xy rgbs)))]]
-
-      {:element element
-       :kernel kernel})))
+      kernel)))
 
 
 (defn get-morphological-op [op-key]
