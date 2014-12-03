@@ -1,5 +1,27 @@
 (ns clojure.java.graphics.utils
-  (:import java.awt.image.BufferedImage))
+  (:import java.awt.image.BufferedImage
+           javax.imageio.ImageIO))
+
+;; Utility macro for arbitrary cleanup from The Joy of Clojure
+
+(defmacro with-cleanup [[binding value :as let-vec] close-fn & forms]
+  `(let ~let-vec
+     (try
+       ~@forms
+       (finally (~close-fn ~binding)))))
+
+
+;; Saving and opening image files
+
+(defn file->image [filename]
+  (ImageIO/read filename))
+
+(defn image->file [img filename]
+  (let [ext (last (clojure.string/split filename #"\."))]
+    (ImageIO/write img ext (io/file filename))))
+
+
+;; Pixel access
 
 (defn get-pixels [img x y w h]
   (cond

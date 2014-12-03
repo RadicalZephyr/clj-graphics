@@ -1,12 +1,10 @@
 (ns clojure.java.graphics.map
   (:require [clojure.java.graphics.connect :as cn]
+            [clojure.java.graphics.util :as util]
             [clojure.java.io :as io]
             [seesaw.core :as s]
             [seesaw.graphics :as g])
-  (:import  (javax.imageio ImageIO
-                           ImageReader
-                           IIOImage)
-            java.awt.Color
+  (:import  java.awt.Color
             java.awt.color.ColorSpace
             java.awt.geom.AffineTransform
             (java.awt.image AffineTransformOp
@@ -15,24 +13,6 @@
                             ColorConvertOp
                             LookupOp
                             PixelGrabber)))
-
-;; Utility macro
-
-(defmacro with-cleanup [[binding value :as let-vec] close-fn & forms]
-  `(let ~let-vec
-     (try
-       ~@forms
-       (finally (~close-fn ~binding)))))
-
-;; Utility to open image files
-
-(defn file->image [filename]
-  (ImageIO/read filename))
-
-(defn image->file [img filename]
-  (let [ext (last (clojure.string/split filename #"\."))]
-    (ImageIO/write img ext (io/file filename))))
-
 
 ;; Seesaw related infrastructure
 
@@ -299,8 +279,8 @@
 
 (do
   (def f (io/file "resources" "diplo-map-simple.gif"))
-  (def img  (file->image f))
-  (with-cleanup [gfx (.createGraphics img)] .dispose
+  (def img  (util/file->image f))
+  (util/with-cleanup [gfx (.createGraphics img)] .dispose
     (.setBackground gfx Color/WHITE)
     (.clearRect gfx 396 3 357 70)
     (.clearRect gfx 394 3 1 70))
