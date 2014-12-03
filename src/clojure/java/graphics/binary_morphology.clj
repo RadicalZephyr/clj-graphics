@@ -1,8 +1,14 @@
 (ns clojure.java.graphics.binary-morphology
+  (:require [clojure.java.graphics.util :as util])
   (:import java.awt.Rectangle
            (java.awt.image BufferedImage
                            BufferedImageOp)))
 
+(defn get-kernel-from-sel [[x y] {[ox oy] :origin
+                                  [w h] :dimensions}]
+  (for [dy (range h)
+        dx (range w)]
+    [(+ x (- dx ox)) (+ y (- dy oy))]))
 (defn get-morphological-op [op-key]
   (case op-key
     :dilate (fn [src _] src)
