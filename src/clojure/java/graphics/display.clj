@@ -49,11 +49,6 @@
 
 ;; Process the image as a vector of integers
 
-(defn get-all-rgb [img]
-  (let [img-w (.getWidth  img)
-        img-h (.getHeight img)]
-    (into [] (.getRGB img 0 0 img-w img-h nil 0 img-w))))
-
 (defn make-get-xy [img]
   (let [img-w (.getWidth  img)]
     (fn [coll [x y]]
@@ -61,7 +56,7 @@
                    (* y img-w))))))
 
 (defn w-by-h [img [w h]]
-  (let [rgbs (get-all-rgb img)
+  (let [rgbs (util/get-all-pixels img)
         get-xy (make-get-xy img)
         img-w (.getWidth  img)
         img-h (.getHeight img)]
@@ -100,16 +95,16 @@
     nimg))
 
 (defn connected-image [img]
-  (let [rgb (get-all-rgb  img)
+  (let [rgb (util/get-all-pixels  img)
         img-w (.getWidth  img)
         img-h (.getHeight img)
         nrgb (->> rgb
                   (replace {-16777216 0})
                   (cn/connected-components img-w img-h))]
-    (rgb->image img nrgb)))
+    (util/set-pixels img nrgb)))
 
 (defn components [img]
-  (let [rgb (get-all-rgb img)
+  (let [rgb (util/get-all-pixels img)
         w (.getWidth  img)
         h (.getHeight img)
         crgb (->> rgb

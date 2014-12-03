@@ -40,6 +40,11 @@
                (.getRGB img x y w h pixels 0 w)
                pixels))))))
 
+(defn get-all-pixels [img]
+  (let [w (.getWidth  img)
+        h (.getHeight img)]
+    (get-pixels img 0 0 w h)))
+
 (defn set-pixels [img x y w h pixels]
   (cond
    (or (not pixels)
