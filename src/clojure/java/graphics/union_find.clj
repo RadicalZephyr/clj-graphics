@@ -1,4 +1,4 @@
-(ns diplomacy.game.union-find
+(ns clojure.java.graphics.union-find
   (:refer-clojure :exclude [find]))
 
 (defn find [parent x]

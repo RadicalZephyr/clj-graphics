@@ -1,7 +1,7 @@
-(ns diplomacy.game.union-find-test
+(ns clojure.java.graphics.union-find-test
   (:refer-clojure :exclude [find])
-  (:require [clojure.test              :refer :all]
-            [diplomacy.game.union-find :refer :all]))
+  (:require [clojure.test                      :refer :all]
+            [clojure.java.graphics.union-find :refer :all]))
 
 (deftest union-find-test
 

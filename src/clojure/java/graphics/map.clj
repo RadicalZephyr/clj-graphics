@@ -1,5 +1,5 @@
-(ns diplomacy.game.map
-  (:require [diplomacy.game.connect :as cn]
+(ns clojure.java.graphics.map
+  (:require [clojure.java.graphics.connect :as cn]
             [clojure.java.io :as io]
             [seesaw.core :as s]
             [seesaw.graphics :as g])

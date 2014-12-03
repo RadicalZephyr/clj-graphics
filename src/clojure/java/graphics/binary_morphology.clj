@@ -1,4 +1,4 @@
-(ns diplomacy.game.binary-morphology
+(ns clojure.java.graphics.binary-morphology
   (:import java.awt.Rectangle
            (java.awt.image BufferedImage
                            BufferedImageOp)))

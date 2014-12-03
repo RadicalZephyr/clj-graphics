@@ -1,6 +1,6 @@
-(ns diplomacy.game.connect-test
-  (:require [clojure.test           :refer :all]
-            [diplomacy.game.connect :refer :all]))
+(ns clojure.java.graphics.connect-test
+  (:require [clojure.test                  :refer :all]
+            [clojure.java.graphics.connect :refer :all]))
 
 (deftest connected-components-test
   (testing "Recursive connected components"

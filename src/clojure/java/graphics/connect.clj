@@ -1,5 +1,5 @@
-(ns diplomacy.game.connect
-  (:require [diplomacy.game.union-find :as uf]))
+(ns clojure.java.graphics.connect
+  (:require [clojure.java.graphics.union-find :as uf]))
 
 (def ^:dynamic max-x)
 

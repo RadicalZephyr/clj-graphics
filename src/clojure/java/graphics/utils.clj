@@ -1,4 +1,4 @@
-(ns diplomacy.graphics.utils
+(ns clojure.java.graphics.utils
   (:import java.awt.image.BufferedImage))
 
 (defn get-pixels [img x y w h]

@@ -1,6 +1,6 @@
-(ns diplomacy.graphics.utils-test
-  (:require [clojure.test             :refer :all]
-            [diplomacy.graphics.utils :refer :all])
+(ns clojure.java.graphics.utils-test
+  (:require [clojure.test                 :refer :all]
+            [clojure.java.graphics..utils :refer :all])
   (:import java.awt.image.BufferedImage))
 
 (deftest get-pixels-test
