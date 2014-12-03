@@ -1,4 +1,4 @@
-(ns clojure.java.graphics.map
+(ns clojure.java.graphics.display
   (:require [clojure.java.graphics.connect :as cn]
             [clojure.java.graphics.util :as util]
             [clojure.java.io :as io]
