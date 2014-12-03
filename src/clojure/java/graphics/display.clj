@@ -134,7 +134,7 @@
        :words-component words-component
        :corners corners})))
 
-(do
+(defn do-slideshow []
   (-main)
   (.setAlwaysOnTop @root true)
   (def data (-> (io/file "resources" "diplo-map-simple.gif")
