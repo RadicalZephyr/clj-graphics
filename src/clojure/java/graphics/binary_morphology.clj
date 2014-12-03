@@ -4,7 +4,7 @@
            (java.awt.image BufferedImage
                            BufferedImageOp)))
 
-(defn get-kernel-from-sel [[x y] {[ox oy] :origin
+(defn get-kernel-from-st-el [[x y] {[ox oy] :origin
                                   [w h] :dimensions}]
   (for [dy (range h)
         dx (range w)]
