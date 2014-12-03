@@ -10,7 +10,7 @@
         dx (range w)]
     [(+ x (- dx ox)) (+ y (- dy oy))]))
 
-(defn is-in-bounds? [[x y] [w h]]
+(defn is-in-bounds? [[w h] [x y]]
   (and (> w x -1)
        (> h y -1)))
 (defn get-morphological-op [op-key]
