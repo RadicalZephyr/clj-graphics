@@ -110,6 +110,7 @@
 
 (defn process-image [img]
   (let [iimg (util/->interleave img (draw-and-sleep 500)
+                                remove-header
                                 (op/color-convert-image ColorSpace/CS_GRAY)
                                 op/invert-image
                                 (op/threshold-image 150))
