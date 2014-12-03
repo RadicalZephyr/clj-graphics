@@ -13,6 +13,26 @@
 (defn is-in-bounds? [[w h] [x y]]
   (and (> w x -1)
        (> h y -1)))
+
+(defn all-translations [img {:keys [element] :as st-el}]
+  (let [img-w (.getWidth  img)
+        img-h (.getHeight img)
+        img-dim [img-w img-h]
+        rgbs (util/get-pixels img 0 0 img-w img-h)
+        get-xy (fn [coll [x y]]
+                 (get coll (+ (* y img-w)
+                              x)))]
+    (for [y (range img-h)
+          x (range img-w)
+          :let [kernel (->>
+                        (get-kernel-from-st-el [x y] st-el)
+                        (filter (partial is-in-bounds? img-dim))
+                        (map (partial get-xy rgbs)))]]
+
+      {:element element
+       :kernel kernel})))
+
+
 (defn get-morphological-op [op-key]
   (case op-key
     :dilate (fn [src _] src)
