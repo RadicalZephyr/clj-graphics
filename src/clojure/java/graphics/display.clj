@@ -35,7 +35,7 @@
 (defn -main [& args]
   (compare-and-set!
    root nil (s/frame :title "Images!!"
-                     :minimum-size [385 :by 410]
+                     :minimum-size [760 :by 780]
                      :content (s/canvas :id :canvas)))
   (show-frame @root))
 
@@ -134,6 +134,7 @@
 
 (do
   (-main)
+  (.setAlwaysOnTop @root true)
   (def data (-> (io/file "resources" "diplo-map-simple.gif")
                 util/file->image
                 process-image)))
