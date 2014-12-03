@@ -4,17 +4,9 @@
             [clojure.java.graphics.image-op :as op]
             [clojure.java.graphics.util :as util]
             [clojure.java.io :as io]
-            [seesaw.core :as s]
-            [seesaw.graphics :as g])
-  (:import  java.awt.Color
-            java.awt.color.ColorSpace
-            java.awt.geom.AffineTransform
-            (java.awt.image AffineTransformOp
-                            BufferedImage
-                            ByteLookupTable
-                            ColorConvertOp
-                            LookupOp
-                            PixelGrabber)))
+            [seesaw.core :as s])
+  (:import (java.awt Color)
+           (java.awt.color ColorSpace)))
 
 ;; Seesaw related infrastructure
 

@@ -1,7 +1,7 @@
 (ns clojure.java.graphics.util
   (:require [clojure.java.io :as io])
-  (:import java.awt.image.BufferedImage
-           javax.imageio.ImageIO))
+  (:import (java.awt.image BufferedImage)
+           (javax.imageio ImageIO)))
 
 ;; Utility macro for arbitrary cleanup from The Joy of Clojure
 
