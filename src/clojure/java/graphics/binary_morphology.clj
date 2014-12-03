@@ -9,6 +9,10 @@
   (for [dy (range h)
         dx (range w)]
     [(+ x (- dx ox)) (+ y (- dy oy))]))
+
+(defn is-in-bounds? [[x y] [w h]]
+  (and (> w x -1)
+       (> h y -1)))
 (defn get-morphological-op [op-key]
   (case op-key
     :dilate (fn [src _] src)
