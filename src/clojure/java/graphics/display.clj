@@ -97,33 +97,43 @@
   (dorun
    (map (partial color-component img) components colors)))
 
-(do
-  (def f (io/file "resources" "diplo-map-simple.gif"))
-  (def img  (util/file->image f))
+(defn remove-header [img]
   (util/with-cleanup [gfx (.createGraphics img)] .dispose
     (.setBackground gfx Color/WHITE)
     (.clearRect gfx 396 3 357 70)
     (.clearRect gfx 394 3 1 70))
+  img)
+
+(defn draw-and-sleep [img time]
+  (draw-image img (get-canvas))
+  (Thread/sleep time))
+
+(defn process-image [img]
+  (let [iimg (util/->interleave img (draw-and-sleep 500)
+                                (op/color-convert-image ColorSpace/CS_GRAY)
+                                op/invert-image
+                                (op/threshold-image 150))
+
+        components-seq    (map second (drop 1 (components iimg)))
+        grouped           (group-by #(> (count %) 100)
+                                    components-seq)
+        border-component  (first (grouped true))
+        words-component   (partition 2 (flatten (grouped false)))]
+    (let [corner-image (util/->interleave iimg (draw-and-sleep 500)
+                                        (op/color-convert-image ColorSpace/CS_sRGB)
+                                        (color-component words-component Color/BLACK)
+                                        (op/color-convert-image ColorSpace/CS_GRAY)
+                                        op/invert-image
+                                        (op/threshold-image 150))
+          corners (corner/get-all-corners
+                   (util/all-translations corner-image [3 3]))]
+      {:img corner-image
+       :border-component border-component
+       :words-component words-component
+       :corners corners})))
+
+(do
   (-main)
-  (def iimg (-> img
-                (op/color-convert-image ColorSpace/CS_GRAY)
-                op/invert-image
-                (op/threshold-image 150)))
-  (def components-seq (map second (drop 1 (components iimg))))
-  (let [grouped (group-by #(> (count %) 100)
-                   components-seq)]
-    (def border-component (first (grouped true)))
-    (def words-component (partition 2 (flatten (grouped false)))))
-
-  (def corner-img (-> iimg
-                      (op/color-convert-image ColorSpace/CS_sRGB)
-                      (color-component words-component Color/BLACK)
-                      (op/color-convert-image ColorSpace/CS_GRAY)
-                      op/invert-image
-                      (op/threshold-image 150)))
-   ;; Get the only element of the list
-  (draw-image corner-img
-              (get-canvas))
-
-  (def corners (corner/get-all-corners
-                (util/all-translations img [3 3]))))
+  (def data (-> (io/file "resources" "diplo-map-simple.gif")
+                util/file->image
+                process-image)))
