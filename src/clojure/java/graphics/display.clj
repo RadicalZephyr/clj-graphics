@@ -109,7 +109,7 @@
   (Thread/sleep time))
 
 (defn process-image [img]
-  (let [iimg (util/->interleave img (draw-and-sleep 500)
+  (let [iimg (util/->interleave img (draw-and-sleep 1000)
                                 remove-header
                                 (op/color-convert-image ColorSpace/CS_GRAY)
                                 op/invert-image
@@ -120,7 +120,7 @@
                                     components-seq)
         border-component  (first (grouped true))
         words-component   (partition 2 (flatten (grouped false)))]
-    (let [corner-image (util/->interleave iimg (draw-and-sleep 500)
+    (let [corner-image (util/->interleave iimg (draw-and-sleep 1000)
                                         (op/color-convert-image ColorSpace/CS_sRGB)
                                         (color-component words-component Color/BLACK)
                                         (op/color-convert-image ColorSpace/CS_GRAY)
