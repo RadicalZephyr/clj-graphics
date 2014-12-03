@@ -11,6 +11,16 @@
        ~@forms
        (finally (~close-fn ~binding)))))
 
+(defmacro ->interleave [x inter-fn & forms]
+  `(let [wrapped-fn (fn [i]
+                        ~(if (seq? inter-fn)
+                           (with-meta `(~(first inter-fn) i ~@(next inter-fn))
+                             (meta inter-fn))
+                           (list inter-fn 'i))
+                        i)]
+     (-> ~x
+         ~@(interleave (repeat 'wrapped-fn)
+                      forms))))
 
 ;; Saving and opening image files
 
