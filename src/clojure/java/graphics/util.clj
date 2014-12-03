@@ -45,6 +45,23 @@
         h (.getHeight img)]
     (get-pixels img 0 0 w h)))
 
+(defn all-translations [img [w h]]
+  (let [rgbs (get-all-pixels img)
+        img-w (.getWidth  img)
+        img-h (.getHeight img)
+        get-xy (fn [coll [x y]]
+                 (get coll (+ (* y img-w)
+                              x)))]
+    (for [y (range (- img-h h))
+          x (range (- img-w w))]
+      {:point [x y]
+       :pixels (into []
+                     (map (partial get-xy rgbs)
+                          (for [dx (range w)
+                                dy (range h)]
+                            [(+ x dx) (+ y dy)])))})))
+
+
 (defn set-pixels [img x y w h pixels]
   (cond
    (or (not pixels)

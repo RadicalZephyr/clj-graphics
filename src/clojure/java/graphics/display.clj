@@ -49,22 +49,6 @@
 
 ;; Process the image as a vector of integers
 
-(defn all-translations [img [w h]]
-  (let [rgbs (util/get-all-pixels img)
-        img-w (.getWidth  img)
-        img-h (.getHeight img)
-        get-xy (fn [coll [x y]]
-                 (get coll (+ (* y img-w)
-                              x)))]
-    (for [y (range (- img-h h))
-          x (range (- img-w w))]
-      {:point [x y]
-       :pixels (into []
-                     (map (partial get-xy rgbs)
-                          (for [dx (range w)
-                                dy (range h)]
-                            [(+ x dx) (+ y dy)])))})))
-
 (defn get-area-subimage [img points]
   (let [xs (map first points)
         ys (map second points)
@@ -198,4 +182,5 @@
   (draw-image corner-img
               (get-canvas))
 
-  (def corners (corner/get-all-corners (all-translations img [3 3]))))
+  (def corners (corner/get-all-corners
+                (util/all-translations img [3 3]))))
