@@ -49,19 +49,15 @@
 
 ;; Process the image as a vector of integers
 
-(defn make-get-xy [img]
-  (let [img-w (.getWidth  img)]
-    (fn [coll [x y]]
-      (get coll (+ x
-                   (* y img-w))))))
-
-(defn w-by-h [img [w h]]
+(defn all-translations [img [w h]]
   (let [rgbs (util/get-all-pixels img)
-        get-xy (make-get-xy img)
         img-w (.getWidth  img)
-        img-h (.getHeight img)]
-    (for [x (range (- img-w w))
-          y (range (- img-h h))]
+        img-h (.getHeight img)
+        get-xy (fn [coll [x y]]
+                 (get coll (+ (* y img-w)
+                              x)))]
+    (for [y (range (- img-h h))
+          x (range (- img-w w))]
       {:point [x y]
        :pixels (into []
                      (map (partial get-xy rgbs)
@@ -202,4 +198,4 @@
   (draw-image corner-img
               (get-canvas))
 
-  (def corners (corner/get-all-corners (w-by-h img [3 3]))))
+  (def corners (corner/get-all-corners (all-translations img [3 3]))))
