@@ -1,4 +1,5 @@
-(ns clojure.java.graphics.utils
+(ns clojure.java.graphics.util
+  (:require [clojure.java.io :as io])
   (:import java.awt.image.BufferedImage
            javax.imageio.ImageIO))
 
