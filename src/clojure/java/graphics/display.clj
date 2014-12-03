@@ -120,12 +120,13 @@
                                     components-seq)
         border-component  (first (grouped true))
         words-component   (partition 2 (flatten (grouped false)))]
-    (let [corner-image (util/->interleave iimg (draw-and-sleep 1000)
-                                        (op/color-convert-image ColorSpace/CS_sRGB)
-                                        (color-component words-component Color/BLACK)
-                                        (op/color-convert-image ColorSpace/CS_GRAY)
-                                        op/invert-image
-                                        (op/threshold-image 150))
+    (let [corner-image
+          (util/->interleave iimg (draw-and-sleep 1000)
+                             (op/color-convert-image ColorSpace/CS_sRGB)
+                             (color-component words-component Color/BLACK)
+                             (op/color-convert-image ColorSpace/CS_GRAY)
+                             op/invert-image
+                             (op/threshold-image 150))
           corners (corner/get-all-corners
                    (util/all-translations corner-image [3 3]))]
       {:img corner-image
