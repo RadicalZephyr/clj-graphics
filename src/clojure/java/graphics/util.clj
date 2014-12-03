@@ -65,12 +65,10 @@
     (for [y (range (- img-h h))
           x (range (- img-w w))]
       {:point [x y]
-       :pixels (into []
-                     (map (partial get-xy rgbs)
-                          (for [dx (range w)
-                                dy (range h)]
-                            [(+ x dx) (+ y dy)])))})))
-
+       :pixels (map (partial get-xy rgbs)
+                    (for [dx (range w)
+                          dy (range h)]
+                      [(+ x dx) (+ y dy)]))})))
 
 (defn set-pixels [img x y w h pixels]
   (cond
