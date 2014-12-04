@@ -14,7 +14,7 @@
   (and (> w x -1)
        (> h y -1)))
 
-(defn all-translations [[w h :as dim] st-el]
+(defn all-translations [[w h] st-el]
   (for [y (range h)
         x (range w)]
     (get-kernel-from-st-el [x y] st-el)))
