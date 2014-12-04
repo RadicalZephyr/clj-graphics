@@ -133,3 +133,23 @@
      :origin (or origin
                  (let [r2 (quot r 2)]
                    [r2 r2]))}))
+
+(defn calculate-dimensions [element]
+  (let [head (first element)]
+    (when (counted? head)
+      [(count head)
+       (count element)])))
+
+(defn make-custom-st [element & {:keys [dimensions origin]}]
+  (let [[w h :as dim] (or dimensions
+                          (calculate-dimensions element)
+                          (throw (IllegalArgumentException.
+                                  (str
+                                   "Must specify the dimensions of the shape, "
+                                   "either by directly passing them or passing "
+                                   "a list of nested collections."))))]
+    {:element (vec element)
+     :dimensions dim
+     :origin (or origin
+                 [(quot w 2)
+                  (quot h 2)])}))
