@@ -57,16 +57,7 @@
   (testing "Starting with a vector"
     (doseq [img-type [BufferedImage/TYPE_INT_RGB
                       BufferedImage/TYPE_INT_ARGB
-                      BufferedImage/TYPE_INT_ARGB_PRE
-                      BufferedImage/TYPE_3BYTE_BGR
-                      BufferedImage/TYPE_4BYTE_ABGR
-                      BufferedImage/TYPE_4BYTE_ABGR_PRE
-                      BufferedImage/TYPE_USHORT_565_RGB
-                      BufferedImage/TYPE_USHORT_555_RGB
-                      BufferedImage/TYPE_BYTE_GRAY
-                      BufferedImage/TYPE_USHORT_GRAY
-                      BufferedImage/TYPE_BYTE_BINARY
-                      BufferedImage/TYPE_BYTE_INDEXED]
+                      BufferedImage/TYPE_4BYTE_ABGR]
             pixels [[1 2 3 4]
                     [4 3 2 1]
                     [0 1 0 1]
