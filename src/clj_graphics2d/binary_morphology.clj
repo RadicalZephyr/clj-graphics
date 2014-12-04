@@ -27,18 +27,26 @@
   (and (> w x -1)
        (> h y -1)))
 
-(defn acc-1s [bimg acc [[x y :as pt] el]]
-  (if (is-in-bounds? [8 8] pt)
+(defn acc-1s [bimg dim acc [[x y :as pt] el]]
+  (if (is-in-bounds? dim pt)
     (let [val (bit-or (get bimg (+ (* y 8)
                                    x))
                       el)]
       (update-in acc [val] concat [pt]))
     acc))
 
-(defn all-translations [[w h] st-el]
-  (for [y (range h)
-        x (range w)]
-    (get-kernel-from-st-el [x y] st-el)))
+(defn dilate [bimg [w h :as dim] st-el]
+  (reduce (partial merge-with (comp set concat))
+          (for [y (range h)
+                x (range w)
+                :when (= (get bimg (+ (* y 8)
+                                      x))
+                         1)
+                :let [kernel (get-kernel-from-st-el [x y] st-el)]]
+            (->> st-el
+                 :element
+                 (map vector kernel)
+                 (reduce (partial acc-1s bimg dim) {})))))
 
 
 (defn get-morphological-op [op-key]
