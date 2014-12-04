@@ -73,3 +73,7 @@
         (Rectangle. 0 0 (.getWidth src) (.getHeight src)))
       (getPoint2D [this src-pt dst-pt]
         (.clone src-pt)))))
+
+(defn morpho-image [img op-key st-el]
+  (let [morpho-op (morphological-op op-key st-el)]
+    (.filter morpho-op img nil)))
