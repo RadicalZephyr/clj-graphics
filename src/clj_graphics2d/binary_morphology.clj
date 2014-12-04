@@ -17,8 +17,8 @@
                 (next codes)))
        acc))))
 
-(defn get-kernel-from-st-el [[x y] {[ox oy] :origin
-                                  [w h] :dimensions}]
+(defn get-kernel-from-st-el [{[ox oy] :origin
+                              [w   h] :dimensions} [x y]]
   (for [dy (range h)
         dx (range w)]
     [(+ x (- dx ox)) (+ y (- dy oy))]))
@@ -36,17 +36,14 @@
     acc))
 
 (defn dilate [bimg [w h :as dim] st-el]
-  (reduce (partial merge-with (comp set concat))
-          (for [y (range h)
-                x (range w)
-                :when (= (get bimg (+ (* y 8)
-                                      x))
-                         1)
-                :let [kernel (get-kernel-from-st-el [x y] st-el)]]
-            (->> st-el
-                 :element
-                 (map vector kernel)
-                 (reduce (partial acc-1s bimg dim) {})))))
+  (let [ones (into #{} (for [y (range h)
+                             x (range w)
+                             :when (= 1 (get bimg (+ (* y 8)
+                                                     x)))] [x y]))]
+    (->> ones
+         (mapcat (partial get-kernel-from-st-el st-el))
+         (filter (partial is-in-bounds? dim))
+         (into #{}))))
 
 
 (defn get-morphological-op [op-key]
