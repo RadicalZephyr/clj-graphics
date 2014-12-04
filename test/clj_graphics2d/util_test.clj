@@ -45,7 +45,25 @@
                       [1 1] 11
                       )
              [11 11  3 4
-              11 11 7 8])))))
+              11 11 7 8]))))
+  (testing "update2d"
+    (testing "no extra args"
+     (is (= (update2d 4 [1 2 3 4
+                         5 6 7 8] [0 0] inc)
+            [2 2 3 4
+             5 6 7 8]))
+     (is (= (update2d 4 [1 2 3 4
+                         5 6 7 8] [0 1] inc)
+            [1 2 3 4
+             6 6 7 8]))
+     (is (= (update2d 4 [1 2 3 4
+                         5 6 7 8] [1 0] inc)
+            [1 3 3 4
+             5 6 7 8]))
+     (is (= (update2d 4 [1 2 3 4
+                         5 6 7 8] [1 1] inc)
+            [1 2 3 4
+             5 7 7 8])))))
 
 (deftest get-pixels-test
   (testing "Nil returns"
