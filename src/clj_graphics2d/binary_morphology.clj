@@ -27,6 +27,14 @@
   (and (> w x -1)
        (> h y -1)))
 
+(defn acc-1s [bimg acc [[x y :as pt] el]]
+  (if (is-in-bounds? [8 8] pt)
+    (let [val (bit-or (get bimg (+ (* y 8)
+                                   x))
+                      el)]
+      (update-in acc [val] concat [pt]))
+    acc))
+
 (defn all-translations [[w h] st-el]
   (for [y (range h)
         x (range w)]
