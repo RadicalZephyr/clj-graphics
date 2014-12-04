@@ -36,14 +36,24 @@
     acc))
 
 (defn dilate [bimg [w h :as dim] st-el]
-  (let [ones (into #{} (for [y (range h)
-                             x (range w)
-                             :when (= 1 (get bimg (+ (* y 8)
-                                                     x)))] [x y]))]
-    (->> ones
-         (mapcat (partial get-kernel-from-st-el st-el))
-         (filter (partial is-in-bounds? dim))
-         (into #{}))))
+  (loop [output-img (vec (take (count bimg) (repeat 0)))
+         pts (for [y (range h)
+                   x (range w)] [x y])]
+    (if (seq pts)
+      (let [[x y :as pt] (first pts)]
+        (if (= (get bimg (+ (* y 8)
+                            x))
+               1)
+          (recur (->> pt
+                      (get-kernel-from-st-el st-el)
+                      (map vector (:element st-el))
+                      (reduce (fn [img [val pt]]
+                                (util/update2d w img pt
+                                               bit-or val))
+                              output-img))
+                 (rest pts))
+          (recur output-img (rest pts))))
+      output-img)))
 
 
 (defn get-morphological-op [op-key]
