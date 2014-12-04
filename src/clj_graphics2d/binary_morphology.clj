@@ -118,21 +118,37 @@
                [(quot w 2)
                 (quot h 2)])})
 
+(defn square [x]
+  (* x x))
+
+(defn distance-sq2d [[x1 y1] [x2 y2]]
+  (+ (square (- x2 x1))
+     (square (- y1 y1))))
+
+(defn make-circle [d]
+  (let [r (quot d 2)
+        r-sq (square r)
+        center [r r]]
+    (for [y (range d)
+          x (range d)]
+      (if (> r-sq (distance-sq2d
+                   center [x y]))
+        1
+        0))))
+
 (defn make-disk-st [d & {:keys [origin]}]
   (let [r (quot d 2)]
     {:element []
-     :dimensions [r r]
+     :dimensions [d d]
      :origin (or origin
-                 (let [r2 (quot r 2)]
-                   [r2 r2]))}))
+                 [r r])}))
 
 (defn make-ring-st [d & {:keys [origin]}]
   (let [r (quot d 2)]
     {:element []
-     :dimensions [r r]
+     :dimensions [d d]
      :origin (or origin
-                 (let [r2 (quot r 2)]
-                   [r2 r2]))}))
+                 [r r])}))
 
 (defn calculate-dimensions [element]
   (let [head (first element)]
