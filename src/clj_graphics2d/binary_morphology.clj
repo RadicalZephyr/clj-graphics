@@ -53,6 +53,23 @@
                      img))
                  output-img))))
 
+(defn erode-match [bimg [w _] {:keys [element] :as st-el} pt]
+  (->> pt
+       (get-kernel-from-st-el st-el)
+       (map (fn [val pt]
+              (if (= val 1)
+                (= (get2d w bimg pt)
+                   1)
+                true)) element)
+       (every? identity)))
+
+(defn erode [bimg [w h :as dim] st-el]
+  (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
+                         pts (for [y (range h)
+                                   x (range w)] [x y])
+                         :head-as pt
+                         :when (erode-match bimg dim st-el pt)]
+    (assoc2d w output-img pt 1)))
 
 (defn get-morphological-op [op-key]
   (case op-key
