@@ -138,3 +138,14 @@
                (.setDataElements raster x y w h pixels))
              (.setRGB img x y w h pixels 0 w))
            img)))
+
+(defn set-all-pixels [img pixels]
+  (let [w (.getWidth  img)
+        h (.getHeight img)]
+    (set-pixels img 0 0 w h pixels)))
+
+(defn set-all-pixels-binary [img pixels]
+  (->> pixels
+       (replace {0 -16777216
+                 1        -1})
+       (set-all-pixels img)))
