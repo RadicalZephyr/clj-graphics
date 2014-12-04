@@ -36,26 +36,22 @@
     acc))
 
 (defn dilate [bimg [w h :as dim] st-el]
-  (loop [output-img (vec (take (count bimg) (repeat 0)))
-         pts (for [y (range h)
-                   x (range w)] [x y])]
-    (if (seq pts)
-      (let [[x y :as pt] (first pts)]
-        (if (= (get bimg (+ (* y 8)
-                            x))
-               1)
-          (recur (->> pt
-                      (get-kernel-from-st-el st-el)
-                      (map vector (:element st-el))
-                      (reduce (fn [img [val pt]]
-                                (if (is-in-bounds? dim pt)
-                                    (util/update2d w img pt
-                                                   bit-or val)
-                                    img))
-                              output-img))
-                 (rest pts))
-          (recur output-img (rest pts))))
-      output-img)))
+  (util/updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
+                          pts (for [y (range h)
+                                    x (range w)] [x y])
+                          :head-as [x y :as pt]
+                          :when (= (get bimg (+ (* y 8)
+                                                x))
+                                   1)]
+    (->> pt
+         (get-kernel-from-st-el st-el)
+         (map vector (:element st-el))
+         (reduce (fn [img [val pt]]
+                   (if (is-in-bounds? dim pt)
+                     (util/update2d w img pt
+                                    bit-or val)
+                     img))
+                 output-img))))
 
 
 (defn get-morphological-op [op-key]

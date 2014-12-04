@@ -1,5 +1,6 @@
 (ns clj-graphics2d.connect
-  (:require [clj-graphics2d.union-find :as uf]))
+  (:require [clj-graphics2d.union-find :as uf]
+            [clj-graphics2d.util :refer [updating-coll-by]]))
 
 (def ^:dynamic max-x)
 
@@ -29,32 +30,22 @@
      [(+ dx x) (+ dy y)])))
 
 (defn search [rgbs label pt]
-  (loop [rgbs (assoc2d rgbs pt label)
-         pts (bounded-neighbours pt)]
-    (if (seq pts)
-      (let [pt (first pts)]
-        (if (= (get2d rgbs pt)
-               -1)
-          (recur (search rgbs label pt)
-                 (rest pts))
-          (recur rgbs
-                 (rest pts))))
-      rgbs)))
+  (updating-coll-by [rgbs (assoc2d rgbs pt label)
+                          pts (bounded-neighbours pt)
+                          :head-as pt
+                          :when (= (get2d rgbs pt) -1)]
+    (search rgbs label pt)))
 
 (defn find-components [rgbs label]
-  (loop [rgbs rgbs
-         pts  (for [x (range max-x)
-                    y (range max-y)]
-                [x y])]
-    (if (seq pts)
-      (let [pt (first pts)]
-        (if (= (get2d rgbs pt)
-               -1)
-          (do (swap! label inc)
-              (recur (search rgbs @label pt)
-                     (rest pts)))
-          (recur rgbs (rest pts))))
-      rgbs)))
+  (updating-coll-by [rgbs rgbs
+                     pts  (for [x (range max-x)
+                                y (range max-y)]
+                            [x y])
+                     :head-as pt
+                     :when (= (get2d rgbs pt)
+                              -1)]
+    (do (swap! label inc)
+        (search rgbs @label pt))))
 
 (defn recursive-connected-components [rgbs]
   (let [label (atom 0)]
