@@ -63,6 +63,16 @@
                          :when (erode-match bimg dim st-el pt)]
     (assoc2d w output-img pt 1)))
 
+(defn close [bimg dim st-el]
+  (-> bimg
+   (dilate dim st-el)
+   (erode dim st-el)))
+
+(defn open [bimg dim st-el]
+  (-> bimg
+   (erode dim st-el)
+   (dilate dim st-el)))
+
 (defn get-morphological-op [op-key]
   (case op-key
     :dilate (fn [src _] src)
