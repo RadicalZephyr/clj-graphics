@@ -39,9 +39,8 @@
   (util/updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
                           pts (for [y (range h)
                                     x (range w)] [x y])
-                          :head-as [x y :as pt]
-                          :when (= (get bimg (+ (* y 8)
-                                                x))
+                          :head-as pt
+                          :when (= (util/get2d w bimg pt)
                                    1)]
     (->> pt
          (get-kernel-from-st-el st-el)
