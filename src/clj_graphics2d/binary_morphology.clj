@@ -142,3 +142,11 @@
      :origin (or origin
                  [(quot w 2)
                   (quot h 2)])}))
+
+(defn make-st-el [type arg & {:as opt}]
+  (case type
+    :box     (apply make-box-st arg opt)
+    :disk    (apply make-disk-st arg opt)
+    :ring    (apply make-ring-st arg opt)
+    :custom  (apply make-custom-st arg opt)
+    nil))
