@@ -1,6 +1,6 @@
-(ns clojure.java.graphics.connect-test
+(ns clj-graphics2d.connect-test
   (:require [clojure.test                  :refer :all]
-            [clojure.java.graphics.connect :refer :all]))
+            [clj-graphics2d.connect :refer :all]))
 
 (deftest connected-components-test
   (testing "Recursive connected components"

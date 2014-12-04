@@ -1,8 +1,8 @@
-(ns clojure.java.graphics.display
-  (:require [clojure.java.graphics.connect :as cn]
-            [clojure.java.graphics.corner :as corner]
-            [clojure.java.graphics.image-op :as op]
-            [clojure.java.graphics.util :as util]
+(ns clj-graphics2d.display
+  (:require [clj-graphics2d.connect :as cn]
+            [clj-graphics2d.corner :as corner]
+            [clj-graphics2d.image-op :as op]
+            [clj-graphics2d.util :as util]
             [clojure.java.io :as io]
             [seesaw.core :as s])
   (:import (java.awt Color)

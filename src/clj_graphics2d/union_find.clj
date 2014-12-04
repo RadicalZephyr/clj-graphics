@@ -1,4 +1,4 @@
-(ns clojure.java.graphics.union-find
+(ns clj-graphics2d.union-find
   (:refer-clojure :exclude [find]))
 
 (defn find [parent x]

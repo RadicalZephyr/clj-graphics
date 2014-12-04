@@ -1,5 +1,5 @@
-(ns clojure.java.graphics.connect
-  (:require [clojure.java.graphics.union-find :as uf]))
+(ns clj-graphics2d.connect
+  (:require [clj-graphics2d.union-find :as uf]))
 
 (def ^:dynamic max-x)
 

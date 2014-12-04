@@ -1,5 +1,5 @@
-(ns clojure.java.graphics.binary-morphology
-  (:require [clojure.java.graphics.util :as util])
+(ns clj-graphics2d.binary-morphology
+  (:require [clj-graphics2d.util :as util])
   (:import java.awt.Rectangle
            (java.awt.image BufferedImage
                            BufferedImageOp)))

@@ -1,4 +1,4 @@
-(ns clojure.java.graphics.image-op
+(ns clj-graphics2d.image-op
   (:import (java.awt.color ColorSpace)
            (java.awt.geom AffineTransform)
            (java.awt.image AffineTransformOp ByteLookupTable

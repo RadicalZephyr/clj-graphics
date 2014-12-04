@@ -1,4 +1,4 @@
-(ns clojure.java.graphics.corner)
+(ns clj-graphics2d.corner)
 
 (def corner-patterns-2x {[-16777216 -16777216 -16777216 -1] :tlo
                          [-16777216 -16777216 -1 -16777216] :tro

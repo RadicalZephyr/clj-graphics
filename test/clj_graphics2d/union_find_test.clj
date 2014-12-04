@@ -1,7 +1,7 @@
-(ns clojure.java.graphics.union-find-test
+(ns clj-graphics2d.union-find-test
   (:refer-clojure :exclude [find])
   (:require [clojure.test                      :refer :all]
-            [clojure.java.graphics.union-find :refer :all]))
+            [clj-graphics2d.union-find :refer :all]))
 
 (deftest union-find-test
 

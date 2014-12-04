@@ -1,4 +1,4 @@
-(ns clojure.java.graphics.util
+(ns clj-graphics2d.util
   (:require [clojure.java.io :as io])
   (:import (java.awt.image BufferedImage)
            (javax.imageio ImageIO)))
