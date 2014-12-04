@@ -22,6 +22,23 @@
          ~@(interleave (repeat 'wrapped-fn)
                       forms))))
 
+(defmacro updating-coll-by [[coll init
+                             itr  itr-init
+                             & {condition :when
+                                single    :head-as}] update-form]
+  (when (or (nil? condition)
+            (nil? single))
+    (throw
+     (IllegalArgumentException. "Must provide both :when and :head-as values.")))
+  `(loop [~coll ~init
+          ~itr ~itr-init]
+     (if (seq ~itr)
+       (let [~single (first ~itr)]
+         (if ~condition
+           (recur ~update-form (rest ~itr))
+           (recur ~coll (rest ~itr))))
+       ~coll)))
+
 ;; Get and set in a 2d grid
 
 (defn get2d [w map [x y]]
