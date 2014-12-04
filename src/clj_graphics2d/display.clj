@@ -1,6 +1,7 @@
 (ns clj-graphics2d.display
   (:require [clj-graphics2d.connect :as cn]
             [clj-graphics2d.corner :as corner]
+            [clj-graphics2d.binary-morphology :as bm]
             [clj-graphics2d.image-op :as op]
             [clj-graphics2d.util :as util]
             [clojure.java.io :as io]
@@ -109,7 +110,7 @@
   (Thread/sleep time))
 
 (defn process-image [img]
-  (let [iimg (util/->interleave img (draw-and-sleep 1000)
+  (let [iimg (util/->interleave img (draw-image (get-canvas))
                                 remove-header
                                 (op/color-convert-image ColorSpace/CS_GRAY)
                                 op/invert-image
@@ -121,7 +122,7 @@
         border-component  (first (grouped true))
         words-component   (partition 2 (flatten (grouped false)))]
     (let [corner-image
-          (util/->interleave iimg (draw-and-sleep 1000)
+          (util/->interleave iimg (draw-image (get-canvas))
                              (op/color-convert-image ColorSpace/CS_sRGB)
                              (color-component words-component Color/BLACK)
                              (op/color-convert-image ColorSpace/CS_GRAY)
@@ -134,7 +135,7 @@
        :words-component words-component
        :corners corners})))
 
-(defn do-slideshow []
+(defn do-processing []
   (-main)
   (.setAlwaysOnTop @root true)
   (def data (-> (io/file "resources" "diplo-map-simple.gif")
