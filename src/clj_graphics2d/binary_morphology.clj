@@ -48,8 +48,10 @@
                       (get-kernel-from-st-el st-el)
                       (map vector (:element st-el))
                       (reduce (fn [img [val pt]]
-                                (util/update2d w img pt
-                                               bit-or val))
+                                (if (is-in-bounds? dim pt)
+                                    (util/update2d w img pt
+                                                   bit-or val)
+                                    img))
                               output-img))
                  (rest pts))
           (recur output-img (rest pts))))
