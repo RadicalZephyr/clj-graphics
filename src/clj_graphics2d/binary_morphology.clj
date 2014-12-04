@@ -123,29 +123,33 @@
 
 (defn distance-sq2d [[x1 y1] [x2 y2]]
   (+ (square (- x2 x1))
-     (square (- y1 y1))))
+     (square (- y2 y1))))
 
-(defn make-circle [d]
+(defn make-circle [d & {:keys [filled] :or {:filled true}}]
   (let [r (quot d 2)
-        r-sq (square r)
+        rq-sq (- (square r) 2)
+        r-sq (int (square (/ d 2)))
         center [r r]]
     (for [y (range d)
-          x (range d)]
-      (if (> r-sq (distance-sq2d
-                   center [x y]))
+          x (range d)
+          :let [distance (distance-sq2d
+                          center [x y])]]
+      (if (and (>= r-sq distance)
+               (or filled
+                   (< rq-sq distance)))
         1
         0))))
 
 (defn make-disk-st [d & {:keys [origin]}]
   (let [r (quot d 2)]
-    {:element []
+    {:element (make-circle d :filled true)
      :dimensions [d d]
      :origin (or origin
                  [r r])}))
 
 (defn make-ring-st [d & {:keys [origin]}]
   (let [r (quot d 2)]
-    {:element []
+    {:element (make-circle d :filled false)
      :dimensions [d d]
      :origin (or origin
                  [r r])}))
