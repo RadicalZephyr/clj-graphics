@@ -117,3 +117,19 @@
    :origin (or origin
                [(quot w 2)
                 (quot h 2)])})
+
+(defn make-disk-st [d & {:keys [origin]}]
+  (let [r (quot d 2)]
+    {:element []
+     :dimensions [r r]
+     :origin (or origin
+                 (let [r2 (quot r 2)]
+                   [r2 r2]))}))
+
+(defn make-ring-st [d & {:keys [origin]}]
+  (let [r (quot d 2)]
+    {:element []
+     :dimensions [r r]
+     :origin (or origin
+                 (let [r2 (quot r 2)]
+                   [r2 r2]))}))
