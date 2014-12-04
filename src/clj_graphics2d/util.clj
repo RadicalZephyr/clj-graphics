@@ -98,6 +98,12 @@
         h (.getHeight img)]
     (get-pixels img 0 0 w h)))
 
+(defn get-all-pixels-binary [img]
+  (->> img
+       get-all-pixels
+       (replace {{-16777216 0
+                  -1        1}})))
+
 (defn all-translations [img [w h]]
   (let [rgbs (get-all-pixels img)
         img-w (.getWidth  img)
