@@ -1,6 +1,8 @@
 (ns clj-graphics2d.binary-morphology
   (:require [clj-graphics2d.util :refer [get2d assoc2d update2d
-                                         updating-coll-by]])
+                                         updating-coll-by
+                                         get-all-pixels-binary
+                                         set-all-pixels-binary]])
   (:import java.awt.Rectangle
            (java.awt.image BufferedImage
                            BufferedImageOp)))
@@ -75,19 +77,24 @@
 
 (defn get-morphological-op [op-key]
   (case op-key
-    :dilate (fn [src _] src)
-    :erode (fn [src _] src)
-    :open (fn [src _] src)
-    :close (fn [src _] src)
+    :dilate  dilate
+    :erode   erode
+    :open    open
+    :close   close
     identity))
 
-(defn morphological-op [op-key]
+(defn morphological-op [op-key st-el]
   (let [op (get-morphological-op op-key)]
     (reify BufferedImageOp
       (filter [this src dst]
         (let [dst (or dst
-                      (.createCompatibleDestImage this src nil))]
-         (op src dst)))
+                      (.createCompatibleDestImage this src nil))
+              pixels (get-all-pixels-binary src)
+              w (.getWidth  src)
+              h (.getHeight src)]
+          (->> st-el
+               (op pixels [w h])
+               (set-all-pixels-binary dst))))
       (createCompatibleDestImage [this src dest-cm]
         (let [dest-cm (or dest-cm
                           (.getColorModel src))
