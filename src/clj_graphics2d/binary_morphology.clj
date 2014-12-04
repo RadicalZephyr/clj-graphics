@@ -28,14 +28,6 @@
   (and (> w x -1)
        (> h y -1)))
 
-(defn acc-1s [bimg dim acc [[x y :as pt] el]]
-  (if (is-in-bounds? dim pt)
-    (let [val (bit-or (get bimg (+ (* y 8)
-                                   x))
-                      el)]
-      (update-in acc [val] concat [pt]))
-    acc))
-
 (defn dilate [bimg [w h :as dim] st-el]
   (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
                           pts (for [y (range h)
