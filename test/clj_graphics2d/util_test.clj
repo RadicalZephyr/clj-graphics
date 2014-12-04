@@ -3,6 +3,22 @@
             [clj-graphics2d.util :refer :all])
   (:import java.awt.image.BufferedImage))
 
+
+(deftest op2d-test
+  (testing "get2d"
+    (is (= (get2d 4 [1 2 3 4
+                     5 6 7 8] [0 0])
+           1))
+    (is (= (get2d 4 [1 2 3 4
+                     5 6 7 8] [0 1])
+           5))
+    (is (= (get2d 4 [1 2 3 4
+                     5 6 7 8] [1 0])
+           2))
+    (is (= (get2d 4 [1 2 3 4
+                     5 6 7 8] [1 1])
+           6))))
+
 (deftest get-pixels-test
   (testing "Nil returns"
     (is (= (get-pixels nil 0 0 0 1)
