@@ -4,6 +4,19 @@
            (java.awt.image BufferedImage
                            BufferedImageOp)))
 
+(defn run-length-encoding [& codes]
+  (into []
+   (loop [acc   []
+          codes codes]
+     (if codes
+       (if (sequential? (first codes))
+         (let [[num val] (first codes)]
+           (recur (concat acc (take num (repeat val)))
+                  (next codes)))
+         (recur (concat acc [(first codes)])
+                (next codes)))
+       acc))))
+
 (defn get-kernel-from-st-el [[x y] {[ox oy] :origin
                                   [w h] :dimensions}]
   (for [dy (range h)
