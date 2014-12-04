@@ -1,7 +1,14 @@
 (ns clj-graphics2d.image-op
-  (:import (java.awt.color ColorSpace)
+  (:require [clj-graphics2d.binary-morphology :refer [get-morphological-op]]
+            [clj-graphics2d.util :refer [get-all-pixels-binary
+                                         set-all-pixels-binary]])
+  (:import (java.awt Rectangle)
+           (java.awt.color ColorSpace)
            (java.awt.geom AffineTransform)
-           (java.awt.image AffineTransformOp ByteLookupTable
+           (java.awt.image AffineTransformOp
+                           BufferedImage
+                           BufferedImageOp
+                           ByteLookupTable
                            ColorConvertOp LookupOp)))
 
 (defn threshold-table [threshold]
@@ -38,3 +45,31 @@
                                colorspace)
                               nil)]
     (.filter ccop img nil)))
+
+(defn morphological-op [op-key st-el]
+  (let [op (get-morphological-op op-key)]
+    (reify BufferedImageOp
+      (filter [this src dst]
+        (let [dst (or dst
+                      (.createCompatibleDestImage this src nil))
+              pixels (get-all-pixels-binary src)
+              w (.getWidth  src)
+              h (.getHeight src)]
+          (->> st-el
+               (op pixels [w h])
+               (set-all-pixels-binary dst))))
+      (createCompatibleDestImage [this src dest-cm]
+        (let [dest-cm (or dest-cm
+                          (.getColorModel src))
+              w (.getWidth src)
+              h (.getHeight src)]
+          (BufferedImage. dest-cm
+                          (.createCompatibleWritableRaster dest-cm w h)
+                          (.isAlphaPremultiplied dest-cm)
+                          nil)))
+      (getRenderingHints [this]
+        nil)
+      (getBounds2D [this src]
+        (Rectangle. 0 0 (.getWidth src) (.getHeight src)))
+      (getPoint2D [this src-pt dst-pt]
+        (.clone src-pt)))))

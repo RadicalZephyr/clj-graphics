@@ -1,11 +1,6 @@
 (ns clj-graphics2d.binary-morphology
   (:require [clj-graphics2d.util :refer [get2d assoc2d update2d
-                                         updating-coll-by
-                                         get-all-pixels-binary
-                                         set-all-pixels-binary]])
-  (:import java.awt.Rectangle
-           (java.awt.image BufferedImage
-                           BufferedImageOp)))
+                                         updating-coll-by]]))
 
 (defn run-length-encoding [& codes]
   (into []
@@ -82,34 +77,6 @@
     :open    open
     :close   close
     identity))
-
-(defn morphological-op [op-key st-el]
-  (let [op (get-morphological-op op-key)]
-    (reify BufferedImageOp
-      (filter [this src dst]
-        (let [dst (or dst
-                      (.createCompatibleDestImage this src nil))
-              pixels (get-all-pixels-binary src)
-              w (.getWidth  src)
-              h (.getHeight src)]
-          (->> st-el
-               (op pixels [w h])
-               (set-all-pixels-binary dst))))
-      (createCompatibleDestImage [this src dest-cm]
-        (let [dest-cm (or dest-cm
-                          (.getColorModel src))
-              w (.getWidth src)
-              h (.getHeight src)]
-          (BufferedImage. dest-cm
-                          (.createCompatibleWritableRaster dest-cm w h)
-                          (.isAlphaPremultiplied dest-cm)
-                          nil)))
-      (getRenderingHints [this]
-        nil)
-      (getBounds2D [this src]
-        (Rectangle. 0 0 (.getWidth src) (.getHeight src)))
-      (getPoint2D [this src-pt dst-pt]
-        (.clone src-pt)))))
 
 (defn make-box-st [[w h :as dim] & {:keys [origin]}]
   {:element (vec (take (* w h) (repeat 1)))
