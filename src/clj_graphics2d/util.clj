@@ -22,6 +22,32 @@
          ~@(interleave (repeat 'wrapped-fn)
                       forms))))
 
+;; Get and set in a 2d grid
+
+(defn get2d [w map [x y]]
+  (get map (+ (* y w)
+               x)))
+
+(defn assoc2d
+  ([w map [x y] val]
+   (assoc map
+     (+ (* y w)
+        x)
+     val))
+
+  ([w map key val & kvs]
+   (let [ret (assoc2d w map key val)]
+     (if kvs
+       (if (next kvs)
+         (recur w ret (first kvs) (second kvs) (nnext kvs))
+         (throw (IllegalArgumentException.
+                 "assoc2d expects even number of arguments after map/vector, found odd number")))
+       ret))))
+
+(defn update2d [w map pt f & args]
+  (assoc2d w map pt
+           (apply f (get2d w map pt) args)))
+
 ;; Saving and opening image files
 
 (defn file->image [filename]
