@@ -110,3 +110,10 @@
         (Rectangle. 0 0 (.getWidth src) (.getHeight src)))
       (getPoint2D [this src-pt dst-pt]
         (.clone src-pt)))))
+
+(defn make-box-st [[w h :as dim] & {:keys [origin]}]
+  {:element (vec (take (* w h) (repeat 1)))
+   :dimensions dim
+   :origin (or origin
+               [(quot w 2)
+                (quot h 2)])})
