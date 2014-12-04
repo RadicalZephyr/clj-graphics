@@ -125,8 +125,10 @@
   (+ (square (- x2 x1))
      (square (- y2 y1))))
 
-(defn make-circle [d & {:keys [filled] :or {:filled true}}]
-  (let [r (quot d 2)
+(defn make-circle [d & {:keys [filled]
+                        :or {filled true}}]
+  (let [r (+ (quot d 2)
+             (if (even? d) -0.5 0))
         rq-sq (- (square r) 2)
         r-sq (int (square (/ d 2)))
         center [r r]]
