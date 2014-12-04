@@ -1,5 +1,6 @@
 (ns clj-graphics2d.binary-morphology
-  (:require [clj-graphics2d.util :as util])
+  (:require [clj-graphics2d.util :refer [get2d assoc2d update2d
+                                         updating-coll-by]])
   (:import java.awt.Rectangle
            (java.awt.image BufferedImage
                            BufferedImageOp)))
@@ -36,18 +37,18 @@
     acc))
 
 (defn dilate [bimg [w h :as dim] st-el]
-  (util/updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
+  (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
                           pts (for [y (range h)
                                     x (range w)] [x y])
                           :head-as pt
-                          :when (= (util/get2d w bimg pt)
+                          :when (= (get2d w bimg pt)
                                    1)]
     (->> pt
          (get-kernel-from-st-el st-el)
          (map vector (:element st-el))
          (reduce (fn [img [val pt]]
                    (if (is-in-bounds? dim pt)
-                     (util/update2d w img pt
+                     (update2d w img pt
                                     bit-or val)
                      img))
                  output-img))))
