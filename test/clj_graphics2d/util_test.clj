@@ -17,7 +17,25 @@
            2))
     (is (= (get2d 4 [1 2 3 4
                      5 6 7 8] [1 1])
-           6))))
+           6)))
+  (testing "assoc2d"
+    (testing "single update"
+      (is (= (assoc2d 4 [1 2 3 4
+                         5 6 7 8] [0 0] 11)
+             [11 2 3 4
+              5 6 7 8]))
+      (is (= (assoc2d 4 [1 2 3 4
+                         5 6 7 8] [0 1] 11)
+             [1  2 3 4
+              11 6 7 8]))
+      (is (= (assoc2d 4 [1 2 3 4
+                         5 6 7 8] [1 0] 11)
+             [1 11 3 4
+              5 6  7 8]))
+      (is (= (assoc2d 4 [1 2 3 4
+                         5 6 7 8] [1 1] 11)
+             [1 2  3 4
+              5 11 7 8])))))
 
 (deftest get-pixels-test
   (testing "Nil returns"
