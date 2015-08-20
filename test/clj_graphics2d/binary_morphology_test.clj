@@ -150,7 +150,7 @@
     (is (= (open st-el bimg)
            (binary-image [2 2] [0 0 0 0])))))
 
-#_(let [bimg (apply (comp vec concat)
+(let [bimg (apply (comp vec concat)
                   '((0 0 0 0 0 0 0 0)
                     (1 1 1 1 1 1 1 0)
                     (0 0 0 1 1 1 1 0)
@@ -158,15 +158,19 @@
                     (0 0 1 1 1 1 1 0)
                     (0 0 0 1 1 1 1 0)
                     (0 0 1 1 0 0 0 0)
-                    (0 0 0 0 0 0 0 0)))]
+                    (0 0 0 0 0 0 0 0)))
+      bimg (binary-image [8 8] bimg)
+      st-el (make-custom-st [1 1 1
+                             1 1 1
+                             1 1 1]
+                            :origin [1 1]
+                            :dimensions [3 3])]
 
   (deftest basic-morphology
     (testing "dilation"
       (is (= (partition 8
-                        (dilate bimg [8 8] {:origin [1 1] :dimensions [3 3]
-                                            :element [1 1 1
-                                                      1 1 1
-                                                      1 1 1]}))
+                        (image
+                         (dilate st-el bimg)))
              '((1 1 1 1 1 1 1 1)
                (1 1 1 1 1 1 1 1)
                (1 1 1 1 1 1 1 1)
@@ -178,10 +182,8 @@
 
     (testing "erosion"
       (is (= (partition 8
-                        (erode bimg [8 8] {:origin [1 1] :dimensions [3 3]
-                                           :element [1 1 1
-                                                     1 1 1
-                                                     1 1 1]}))
+                        (image
+                         (erode st-el bimg)))
              '((0 0 0 0 0 0 0 0)
                (0 0 0 0 0 0 0 0)
                (0 0 0 0 1 1 0 0)
@@ -194,10 +196,8 @@
   (deftest composite-morphology
     (testing "closing"
       (is (= (partition 8
-                        (close bimg [8 8] {:origin [1 1] :dimensions [3 3]
-                                           :element [1 1 1
-                                                     1 1 1
-                                                     1 1 1]}))
+                        (image
+                         (close st-el bimg)))
              '((0 0 0 0 0 0 0 0)
                (0 1 1 1 1 1 1 0)
                (0 0 1 1 1 1 1 0)
@@ -209,10 +209,8 @@
 
     (testing "opening"
       (is (= (partition 8
-                        (open bimg [ 8 8] {:origin [1 1] :dimensions [3 3]
-                                           :element [1 1 1
-                                                     1 1 1
-                                                     1 1 1]}))
+                        (image
+                         (open st-el bimg)))
              '((0 0 0 0 0 0 0 0)
                (0 0 0 1 1 1 1 0)
                (0 0 0 1 1 1 1 0)
