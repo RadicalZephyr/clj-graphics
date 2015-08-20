@@ -3,6 +3,10 @@
             [clj-graphics2d.util :refer [get2d assoc2d update2d
                                          updating-coll-by]]))
 
+;; ------------------------------------------------------------
+;; Run-Length Encoding/Decoding
+;; ------------------------------------------------------------
+
 (defn rl-decode [& codes]
   (let [not-sequential? (complement sequential?)]
     (into []
@@ -30,11 +34,10 @@
                  (rest codes))))
       acc)))
 
-(defn display-image [width img]
-  (pprint (partition width img)))
 
-(defn display-rl-image [width rl-img]
-  (display-image (rl-decode rl-img)))
+;; ------------------------------------------------------------
+;; Structural Elements
+;; ------------------------------------------------------------
 
 (defn- calculate-dimensions [element]
   (let [head (first element)]
@@ -104,11 +107,38 @@
 (defn element [structural-element]
   (:element structural-element))
 
-(defn dimensions [structural-element]
-  (:dimensions structural-element))
-
 (defn origin [structural-element]
   (:origin structural-element))
+
+(defn dimensions [element]
+  (:dimensions element))
+
+(defn width [element]
+  (first (:dimensions element)))
+
+(defn height [element]
+  (second (:dimensions element)))
+
+
+;; ------------------------------------------------------------
+;; Binary Images
+;; ------------------------------------------------------------
+
+(defn binary-image [dimensions image]
+  {:image image
+   :dimensions dimensions})
+
+(defn image [bimg]
+  (:image image))
+
+(defn display-image [binary-image]
+  (pprint (partition (width binary-image)
+                     (image binary-image))))
+
+
+;; ------------------------------------------------------------
+;; Binary Images
+;; ------------------------------------------------------------
 
 (defn get-kernel-from-st-el [{[ox oy] :origin
                               [w   h] :dimensions} [x y]]
