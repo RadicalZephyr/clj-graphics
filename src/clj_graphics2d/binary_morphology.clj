@@ -30,6 +30,12 @@
                  (rest codes))))
       acc)))
 
+(defn display-image [width img]
+  (pprint (partition width img)))
+
+(defn display-rl-image [width rl-img]
+  (display-image (rl-decode rl-img)))
+
 (defn get-kernel-from-st-el [{[ox oy] :origin
                               [w   h] :dimensions} [x y]]
   (for [dy (range h)
@@ -165,6 +171,3 @@
     :ring    (apply make-ring-st arg opt)
     :custom  (apply make-custom-st arg opt)
     nil))
-
-(defn display-image [width img]
-  (pprint (partition width img)))
