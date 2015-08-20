@@ -57,6 +57,21 @@
     (is (= (apply rl-encode (apply rl-decode encoded-bits))
            encoded-bits))))
 
+(deftest structural-elements
+  (let [st-el (make-custom-st [1 1]
+                              :origin [0 0]
+                              :dimensions [2 1])]
+    (is (= (element st-el)
+           [1 1]))
+    (is (= (origin st-el)
+           [0 0]))
+    (is (= (dimensions st-el)
+           [2 1]))
+    (is (= (width st-el)
+           2))
+    (is (= (height st-el)
+           1))))
+
 (deftest binary-images
   (let [bimg (binary-image [2 2] [1 1 0 0])]
     (is (= (image bimg)
