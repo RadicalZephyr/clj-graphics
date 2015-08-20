@@ -112,7 +112,43 @@
     (is (= (kernel-at st-el [1 0])
            [[1 0] [1 1]]))))
 
+(deftest dilation
+  (let [bimg (binary-image [2 2] [1 0 0 0])
+        st-el (make-custom-st [1]
+                              :origin [0 0]
+                              :dimensions [1 1])]
+    (is (= (dilate st-el bimg)
+           bimg)))
+  (let [bimg (binary-image [2 2] [1 0 0 0])
+        st-el (make-custom-st [1 1]
+                              :origin [0 0]
+                              :dimensions [2 1])]
+    (is (= (dilate st-el bimg)
+           (binary-image [2 2] [1 1 0 0])))))
 
+(deftest erosion
+  (let [bimg (binary-image [2 2] [1 1 0 0])
+        st-el (make-custom-st [1 1]
+                              :origin [0 0]
+                              :dimensions [2 1])]
+    (is (= (erode st-el bimg)
+           (binary-image [2 2] [1 0 0 0])))))
+
+(deftest closure
+  (let [bimg (binary-image [2 2] [1 0 0 0])
+        st-el (make-custom-st [1 1]
+                              :origin [0 0]
+                              :dimensions [2 1])]
+    (is (= (close st-el bimg)
+           bimg))))
+
+(deftest opening
+  (let [bimg (binary-image [2 2] [1 0 0 0])
+        st-el (make-custom-st [1 1]
+                              :origin [0 0]
+                              :dimensions [2 1])]
+    (is (= (open st-el bimg)
+           (binary-image [2 2] [0 0 0 0])))))
 
 #_(let [bimg (apply (comp vec concat)
                   '((0 0 0 0 0 0 0 0)

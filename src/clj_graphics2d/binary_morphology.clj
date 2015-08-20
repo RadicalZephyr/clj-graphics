@@ -145,7 +145,7 @@
 
 
 ;; ------------------------------------------------------------
-;; Binary Images
+;; Morphological Operations
 ;; ------------------------------------------------------------
 
 (defn kernel-at [structural-element [x y]]
@@ -159,7 +159,7 @@
   (and (> w x -1)
        (> h y -1)))
 
-#_(defn dilate [bimg [w h :as dim] st-el]
+(defn dilate-image [bimg [w h :as dim] st-el]
   (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
                      pts (for [y (range h)
                                x (range w)] [x y])
@@ -176,7 +176,13 @@
                      img))
                  output-img))))
 
-#_(defn erode-match [bimg [w _] {:keys [element] :as st-el} pt]
+(defn dilate [st-el bimg]
+  (let [img-dimensions (dimensions bimg)
+        img (image bimg)
+        new-img (dilate-image img img-dimensions st-el)]
+    (binary-image img-dimensions new-img)))
+
+(defn erode-match [bimg [w _] {:keys [element] :as st-el} pt]
   (->> pt
        (kernel-at st-el)
        (map (fn [val pt]
@@ -186,7 +192,7 @@
                 true)) element)
        (every? identity)))
 
-#_(defn erode [bimg [w h :as dim] st-el]
+(defn erode-image [bimg [w h :as dim] st-el]
   (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
                      pts (for [y (range h)
                                x (range w)] [x y])
@@ -194,18 +200,24 @@
                      :when (erode-match bimg dim st-el pt)]
     (assoc2d w output-img pt 1)))
 
-#_(defn close [bimg dim st-el]
-  (-> bimg
-   (dilate dim st-el)
-   (erode dim st-el)))
+(defn erode [st-el bimg]
+  (let [img-dimensions (dimensions bimg)
+        img (image bimg)
+        new-img (erode-image img img-dimensions st-el)]
+    (binary-image img-dimensions new-img)))
 
-#_(defn open [bimg dim st-el]
-  (-> bimg
-   (erode dim st-el)
-   (dilate dim st-el)))
+(defn close [st-el bimg]
+  (->> bimg
+       (dilate st-el)
+       (erode st-el)))
+
+(defn open [st-el bimg]
+  (->> bimg
+       (erode st-el)
+       (dilate st-el)))
 
 (defn get-morphological-op [op-key]
-  #_(case op-key
+  (case op-key
     :dilate  dilate
     :erode   erode
     :open    open
