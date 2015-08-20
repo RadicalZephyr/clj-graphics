@@ -26,6 +26,37 @@
     (is (= (rl-decode [4 1] 0 1 0 [4 1])
            [1 1 1 1 0 1 0 1 1 1 1]))))
 
+(deftest rl-encode-test
+  (testing "single bits"
+    (is (= (rl-encode 0)
+           [0]))
+    (is (= (rl-encode 1)
+           [1])))
+  (testing "multiple specific bits"
+    (is (= (rl-encode 0 1 0)
+           [0 1 0])))
+  (testing "single run"
+    (is (= (rl-encode 0 0)
+           [[2 0]]))
+    (is (= (rl-encode 1 1)
+           [[2 1]])))
+  (testing "run followed by bits"
+    (is (= (rl-encode 0 0 1 0)
+           [[2 0] 1 0])))
+  (testing "comprehensive"
+    (is (= (rl-encode 0 1 0 1 1 1 1 0 1 0)
+           [0 1 0 [4 1] 0 1 0]))
+    (is (= (rl-encode 1 1 1 1 0 1 0 1 1 1 1)
+           [[4 1] 0 1 0 [4 1]]))))
+
+(deftest run-length-round-trip
+  (let [bits [1 1 1 1 0 1 0 1 1 1 1]]
+    (is (= (apply rl-decode (apply rl-encode bits))
+           bits)))
+  (let [encoded-bits [0 1 0 [4 1] 0 1 0]]
+    (is (= (apply rl-encode (apply rl-decode encoded-bits))
+           encoded-bits))))
+
 (let [bimg (apply (comp vec concat)
                   '((0 0 0 0 0 0 0 0)
                     (1 1 1 1 1 1 1 0)

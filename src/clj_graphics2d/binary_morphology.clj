@@ -17,6 +17,19 @@
                        (drop-while not-sequential? codes)))
               acc)))))
 
+(defn rl-encode [& codes]
+  (loop [acc   []
+         codes codes]
+    (if (seq codes)
+      (let [is-first? #(= (first codes) %)
+            same-count (count (take-while is-first? codes))]
+        (if (> same-count 1)
+          (recur (conj acc [same-count (first codes)])
+                 (drop-while is-first? codes))
+          (recur (conj acc (first codes))
+                 (rest codes))))
+      acc)))
+
 (defn get-kernel-from-st-el [{[ox oy] :origin
                               [w   h] :dimensions} [x y]]
   (for [dy (range h)
