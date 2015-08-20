@@ -59,12 +59,16 @@
 
 (deftest structural-elements
   (let [st-el (make-custom-st [1 1]
-                              :origin [0 0]
+                              :origin [1 0]
                               :dimensions [2 1])]
     (is (= (element st-el)
            [1 1]))
     (is (= (origin st-el)
-           [0 0]))
+           [1 0]))
+    (is (= (origin-x st-el)
+           1))
+    (is (= (origin-y st-el)
+           0))
     (is (= (dimensions st-el)
            [2 1]))
     (is (= (width st-el)

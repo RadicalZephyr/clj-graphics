@@ -110,14 +110,20 @@
 (defn origin [structural-element]
   (:origin structural-element))
 
+(defn origin-x [structural-element]
+  (first (origin structural-element)))
+
+(defn origin-y [structural-element]
+  (second (origin structural-element)))
+
 (defn dimensions [element]
   (:dimensions element))
 
 (defn width [element]
-  (first (:dimensions element)))
+  (first (dimensions element)))
 
 (defn height [element]
-  (second (:dimensions element)))
+  (second (dimensions element)))
 
 
 ;; ------------------------------------------------------------
