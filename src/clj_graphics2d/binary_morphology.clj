@@ -1,7 +1,7 @@
 (ns clj-graphics2d.binary-morphology
-  (:require [clojure.pprint :refer [pprint]]
-            [clj-graphics2d.util :refer [get2d assoc2d update2d
-                                         updating-coll-by]]))
+  (:require [clj-graphics2d.util :refer [get2d assoc2d update2d
+                                         updating-coll-by]]
+            [clojure.string :as str]))
 
 ;; ------------------------------------------------------------
 ;; Run-Length Encoding/Decoding
@@ -129,11 +129,13 @@
    :dimensions dimensions})
 
 (defn image [bimg]
-  (:image image))
+  (:image bimg))
 
 (defn display-image [binary-image]
-  (pprint (partition (width binary-image)
-                     (image binary-image))))
+  (println (->> (image binary-image)
+                (partition (width binary-image))
+                (map #(str/join " " %))
+                (str/join "\n"))))
 
 
 ;; ------------------------------------------------------------

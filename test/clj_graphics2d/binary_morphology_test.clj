@@ -57,6 +57,19 @@
     (is (= (apply rl-encode (apply rl-decode encoded-bits))
            encoded-bits))))
 
+(deftest binary-images
+  (let [bimg (binary-image [2 2] [1 1 0 0])]
+    (is (= (image bimg)
+           [1 1 0 0]))
+    (is (= (dimensions bimg)
+           [2 2]))
+    (is (= (width bimg)
+           2))
+    (is (= (height bimg)
+           2))
+    (is (= (with-out-str (display-image bimg))
+           "1 1\n0 0\n"))))
+
 (let [bimg (apply (comp vec concat)
                   '((0 0 0 0 0 0 0 0)
                     (1 1 1 1 1 1 1 0)
