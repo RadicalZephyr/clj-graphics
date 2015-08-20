@@ -148,11 +148,12 @@
 ;; Binary Images
 ;; ------------------------------------------------------------
 
-(defn get-kernel-from-st-el [{[ox oy] :origin
-                              [w   h] :dimensions} [x y]]
-  (for [dy (range h)
-        dx (range w)]
-    [(+ x (- dx ox)) (+ y (- dy oy))]))
+(defn kernel-at [structural-element [x y]]
+  (let [oy (origin-y structural-element)
+        ox (origin-x structural-element)]
+    (for [dy (range (height structural-element))
+          dx (range (width structural-element))]
+      [(+ x (- dx ox)) (+ y (- dy ox))])))
 
 (defn is-in-bounds? [[w h] [x y]]
   (and (> w x -1)
@@ -166,7 +167,7 @@
                           :when (= (get2d w bimg pt)
                                    1)]
     (->> pt
-         (get-kernel-from-st-el st-el)
+         (kernel-at st-el)
          (map vector (:element st-el))
          (reduce (fn [img [val pt]]
                    (if (is-in-bounds? dim pt)
@@ -177,7 +178,7 @@
 
 (defn erode-match [bimg [w _] {:keys [element] :as st-el} pt]
   (->> pt
-       (get-kernel-from-st-el st-el)
+       (kernel-at st-el)
        (map (fn [val pt]
               (if (= val 1)
                 (= (get2d w bimg pt)

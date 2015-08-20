@@ -89,6 +89,29 @@
     (is (= (with-out-str (display-image bimg))
            "1 1\n0 0\n"))))
 
+(deftest structured-element-kernel-test
+  (let [st-el (make-custom-st [1]
+                              :origin [0 0]
+                              :dimensions [1 1])]
+    (is (= (kernel-at st-el [0 0])
+           [[0 0]]))
+    (is (= (kernel-at st-el [0 1])
+           [[0 1]])))
+  (let [st-el (make-custom-st [1 0]
+                              :origin [0 0]
+                              :dimensions [2 1])]
+    (is (= (kernel-at st-el [0 0])
+           [[0 0] [1 0]]))
+    (is (= (kernel-at st-el [0 1])
+           [[0 1] [1 1]])))
+  (let [st-el (make-custom-st [1 0]
+                              :origin [0 0]
+                              :dimensions [1 2])]
+    (is (= (kernel-at st-el [0 0])
+           [[0 0] [0 1]]))
+    (is (= (kernel-at st-el [1 0])
+           [[1 0] [1 1]]))))
+
 (let [bimg (apply (comp vec concat)
                   '((0 0 0 0 0 0 0 0)
                     (1 1 1 1 1 1 1 0)
