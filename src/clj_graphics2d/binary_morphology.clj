@@ -36,6 +36,12 @@
 (defn display-rl-image [width rl-img]
   (display-image (rl-decode rl-img)))
 
+(defn- calculate-dimensions [element]
+  (let [head (first element)]
+    (when (counted? head)
+      [(count head)
+       (count element)])))
+
 (defn make-custom-st [element & {:keys [dimensions origin]}]
   (let [[w h :as dim] (or dimensions
                           (calculate-dimensions element)
@@ -49,6 +55,51 @@
      :origin (or origin
                  [(quot w 2)
                   (quot h 2)])}))
+
+(defn make-box-st [[w h :as dim] & {:keys [origin]}]
+  (make-custom-st (vec (take (* w h) (repeat 1)))
+                  :dimensions dim
+                  :origin (or origin
+                              [(quot w 2)
+                               (quot h 2)])))
+
+(defn- square [x]
+  (* x x))
+
+(defn- distance-sq2d [[x1 y1] [x2 y2]]
+  (+ (square (- x2 x1))
+     (square (- y2 y1))))
+
+(defn make-circle [d & {:keys [filled]
+                        :or {filled true}}]
+  (let [r (+ (quot d 2)
+             (if (even? d) -0.5 0))
+        rq-sq (- (square r) 2)
+        r-sq (int (square (/ d 2)))
+        center [r r]]
+    (for [y (range d)
+          x (range d)
+          :let [distance (distance-sq2d
+                          center [x y])]]
+      (if (and (>= r-sq distance)
+               (or filled
+                   (< rq-sq distance)))
+        1
+        0))))
+
+(defn make-disk-st [d & {:keys [origin]}]
+  (let [r (quot d 2)]
+    (make-custom-st (make-circle d :filled true)
+                    :dimensions [d d]
+                    :origin (or origin
+                                [r r]))))
+
+(defn make-ring-st [d & {:keys [origin]}]
+  (let [r (quot d 2)]
+    (make-custom-st (make-circle d :filled false)
+                    :dimensions [d d]
+                    :origin (or origin
+                                [r r]))))
 
 (defn element [structural-element]
   (:element structural-element))
@@ -122,56 +173,6 @@
     :close   close
     identity))
 
-(defn make-box-st [[w h :as dim] & {:keys [origin]}]
-  {:element (vec (take (* w h) (repeat 1)))
-   :dimensions dim
-   :origin (or origin
-               [(quot w 2)
-                (quot h 2)])})
-
-(defn square [x]
-  (* x x))
-
-(defn distance-sq2d [[x1 y1] [x2 y2]]
-  (+ (square (- x2 x1))
-     (square (- y2 y1))))
-
-(defn make-circle [d & {:keys [filled]
-                        :or {filled true}}]
-  (let [r (+ (quot d 2)
-             (if (even? d) -0.5 0))
-        rq-sq (- (square r) 2)
-        r-sq (int (square (/ d 2)))
-        center [r r]]
-    (for [y (range d)
-          x (range d)
-          :let [distance (distance-sq2d
-                          center [x y])]]
-      (if (and (>= r-sq distance)
-               (or filled
-                   (< rq-sq distance)))
-        1
-        0))))
-
-(defn make-disk-st [d & {:keys [origin]}]
-  (let [r (quot d 2)]
-    {:element (make-circle d :filled true)
-     :dimensions [d d]
-     :origin (or origin
-                 [r r])}))
-
-(defn make-ring-st [d & {:keys [origin]}]
-  (let [r (quot d 2)]
-    {:element (make-circle d :filled false)
-     :dimensions [d d]
-     :origin (or origin
-                 [r r])}))
-
-(defn calculate-dimensions [element]
-  (let [head (first element)]
-    (when (counted? head)
-      [(count head)
-       (count element)])))
 
 
 
