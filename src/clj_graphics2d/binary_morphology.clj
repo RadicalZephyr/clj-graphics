@@ -4,17 +4,18 @@
                                          updating-coll-by]]))
 
 (defn run-length-encoding [& codes]
-  (into []
-   (loop [acc   []
-          codes codes]
-     (if codes
-       (if (sequential? (first codes))
-         (let [[num val] (first codes)]
-           (recur (concat acc (take num (repeat val)))
-                  (next codes)))
-         (recur (concat acc [(first codes)])
-                (next codes)))
-       acc))))
+  (let [not-sequential? (complement sequential?)]
+    (into []
+          (loop [acc []
+                 codes (seq codes)]
+            (if (seq codes)
+              (if (sequential? (first codes))
+                (let [[n value] (first codes)]
+                  (recur (concat acc (take n (repeat value)))
+                         (rest codes)))
+                (recur (concat acc (take-while not-sequential? codes))
+                       (drop-while not-sequential? codes)))
+              acc)))))
 
 (defn get-kernel-from-st-el [{[ox oy] :origin
                               [w   h] :dimensions} [x y]]
