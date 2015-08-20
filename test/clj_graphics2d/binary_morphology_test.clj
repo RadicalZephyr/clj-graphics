@@ -112,7 +112,9 @@
     (is (= (kernel-at st-el [1 0])
            [[1 0] [1 1]]))))
 
-(let [bimg (apply (comp vec concat)
+
+
+#_(let [bimg (apply (comp vec concat)
                   '((0 0 0 0 0 0 0 0)
                     (1 1 1 1 1 1 1 0)
                     (0 0 0 1 1 1 1 0)

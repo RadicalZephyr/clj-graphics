@@ -159,24 +159,24 @@
   (and (> w x -1)
        (> h y -1)))
 
-(defn dilate [bimg [w h :as dim] st-el]
+#_(defn dilate [bimg [w h :as dim] st-el]
   (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
-                          pts (for [y (range h)
-                                    x (range w)] [x y])
-                          :head-as pt
-                          :when (= (get2d w bimg pt)
-                                   1)]
+                     pts (for [y (range h)
+                               x (range w)] [x y])
+                     :head-as pt
+                     :when (= (get2d w bimg pt)
+                              1)]
     (->> pt
          (kernel-at st-el)
          (map vector (:element st-el))
          (reduce (fn [img [val pt]]
                    (if (is-in-bounds? dim pt)
                      (update2d w img pt
-                                    bit-or val)
+                               bit-or val)
                      img))
                  output-img))))
 
-(defn erode-match [bimg [w _] {:keys [element] :as st-el} pt]
+#_(defn erode-match [bimg [w _] {:keys [element] :as st-el} pt]
   (->> pt
        (kernel-at st-el)
        (map (fn [val pt]
@@ -186,39 +186,28 @@
                 true)) element)
        (every? identity)))
 
-(defn erode [bimg [w h :as dim] st-el]
+#_(defn erode [bimg [w h :as dim] st-el]
   (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
-                         pts (for [y (range h)
-                                   x (range w)] [x y])
-                         :head-as pt
-                         :when (erode-match bimg dim st-el pt)]
+                     pts (for [y (range h)
+                               x (range w)] [x y])
+                     :head-as pt
+                     :when (erode-match bimg dim st-el pt)]
     (assoc2d w output-img pt 1)))
 
-(defn close [bimg dim st-el]
+#_(defn close [bimg dim st-el]
   (-> bimg
    (dilate dim st-el)
    (erode dim st-el)))
 
-(defn open [bimg dim st-el]
+#_(defn open [bimg dim st-el]
   (-> bimg
    (erode dim st-el)
    (dilate dim st-el)))
 
 (defn get-morphological-op [op-key]
-  (case op-key
+  #_(case op-key
     :dilate  dilate
     :erode   erode
     :open    open
     :close   close
     identity))
-
-
-
-
-(defn make-st-el [type arg & {:as opt}]
-  (case type
-    :box     (apply make-box-st arg opt)
-    :disk    (apply make-disk-st arg opt)
-    :ring    (apply make-ring-st arg opt)
-    :custom  (apply make-custom-st arg opt)
-    nil))
