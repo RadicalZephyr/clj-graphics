@@ -1,5 +1,6 @@
 (ns clj-graphics2d.binary-morphology
-  (:require [clj-graphics2d.util :refer [get2d assoc2d update2d
+  (:require [clojure.pprint :refer [pprint]]
+            [clj-graphics2d.util :refer [get2d assoc2d update2d
                                          updating-coll-by]]))
 
 (defn run-length-encoding [& codes]
@@ -150,3 +151,6 @@
     :ring    (apply make-ring-st arg opt)
     :custom  (apply make-custom-st arg opt)
     nil))
+
+(defn display-image [width img]
+  (pprint (partition width img)))
