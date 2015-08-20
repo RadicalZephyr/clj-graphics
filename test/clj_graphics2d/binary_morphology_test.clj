@@ -3,27 +3,27 @@
             [clojure.test :refer :all]))
 
 
-(deftest run-length-encoding-test
+(deftest rl-decode-test
   (testing "single bits"
-   (is (= (run-length-encoding 0)
+   (is (= (rl-decode 0)
           [0]))
-   (is (= (run-length-encoding 1)
+   (is (= (rl-decode 1)
           [1])))
   (testing "multiple specific bits"
-    (is (= (run-length-encoding 0 1 0)
+    (is (= (rl-decode 0 1 0)
            [0 1 0])))
   (testing "single run"
-    (is (= (run-length-encoding [2 0])
+    (is (= (rl-decode [2 0])
            [0 0]))
-    (is (= (run-length-encoding [2 1])
+    (is (= (rl-decode [2 1])
            [1 1])))
   (testing "run followed by bits"
-    (is (= (run-length-encoding [2 0] 1 0)
+    (is (= (rl-decode [2 0] 1 0)
            [0 0 1 0])))
   (testing "comprehensive"
-    (is (= (run-length-encoding 0 1 0 [4 1] 0 1 0)
+    (is (= (rl-decode 0 1 0 [4 1] 0 1 0)
            [0 1 0 1 1 1 1 0 1 0]))
-    (is (= (run-length-encoding [4 1] 0 1 0 [4 1])
+    (is (= (rl-decode [4 1] 0 1 0 [4 1])
            [1 1 1 1 0 1 0 1 1 1 1]))))
 
 (let [bimg (apply (comp vec concat)

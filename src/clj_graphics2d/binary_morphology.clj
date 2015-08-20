@@ -3,7 +3,7 @@
             [clj-graphics2d.util :refer [get2d assoc2d update2d
                                          updating-coll-by]]))
 
-(defn run-length-encoding [& codes]
+(defn rl-decode [& codes]
   (let [not-sequential? (complement sequential?)]
     (into []
           (loop [acc []
