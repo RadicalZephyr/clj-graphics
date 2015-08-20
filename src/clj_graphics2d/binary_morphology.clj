@@ -36,6 +36,29 @@
 (defn display-rl-image [width rl-img]
   (display-image (rl-decode rl-img)))
 
+(defn make-custom-st [element & {:keys [dimensions origin]}]
+  (let [[w h :as dim] (or dimensions
+                          (calculate-dimensions element)
+                          (throw (IllegalArgumentException.
+                                  (str
+                                   "Must specify the dimensions of the shape, "
+                                   "either by directly passing them or passing "
+                                   "a list of nested collections."))))]
+    {:element (vec element)
+     :dimensions dim
+     :origin (or origin
+                 [(quot w 2)
+                  (quot h 2)])}))
+
+(defn element [structural-element]
+  (:element structural-element))
+
+(defn dimensions [structural-element]
+  (:dimensions structural-element))
+
+(defn origin [structural-element]
+  (:origin structural-element))
+
 (defn get-kernel-from-st-el [{[ox oy] :origin
                               [w   h] :dimensions} [x y]]
   (for [dy (range h)
@@ -150,19 +173,7 @@
       [(count head)
        (count element)])))
 
-(defn make-custom-st [element & {:keys [dimensions origin]}]
-  (let [[w h :as dim] (or dimensions
-                          (calculate-dimensions element)
-                          (throw (IllegalArgumentException.
-                                  (str
-                                   "Must specify the dimensions of the shape, "
-                                   "either by directly passing them or passing "
-                                   "a list of nested collections."))))]
-    {:element (vec element)
-     :dimensions dim
-     :origin (or origin
-                 [(quot w 2)
-                  (quot h 2)])}))
+
 
 (defn make-st-el [type arg & {:as opt}]
   (case type
