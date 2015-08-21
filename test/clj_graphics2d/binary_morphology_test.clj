@@ -139,18 +139,18 @@
     (is (= (extract-kernel bimg [[0 0] [1 0] [0 1] [1 1]])
            [1 2 3 4]))))
 
-(deftest intersect?-test
+(deftest fit?-test
   (let [st-el (structuring-element [1 1]
                                    :origin [0 0]
                                    :dimensions [2 1])]
-    (is (= (intersect? st-el [1 1])
+    (is (= (fit? st-el [1 1])
            true))
-    (is (= (intersect? st-el [0 1])
+    (is (= (fit? st-el [0 1])
            false)))
   (let [st-el (structuring-element [0 1 0]
                                    :origin [1 0]
                                    :dimensions [3 1])]
-    (is (= (intersect? st-el [1 1 1])
+    (is (= (fit? st-el [1 1 1])
            true))))
 
 (deftest hit?-test
@@ -164,7 +164,7 @@
   (let [st-el (structuring-element [0 1 0]
                                    :origin [1 0]
                                    :dimensions [3 1])]
-    (is (= (intersect? st-el [1 1 1])
+    (is (= (fit? st-el [1 1 1])
            true))))
 
 (deftest dilate-at-test

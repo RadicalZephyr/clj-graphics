@@ -173,7 +173,7 @@
   (or (= st-bit 0)
       (= st-bit probe-bit)))
 
-(defn intersect? [st-el probe]
+(defn fit? [st-el probe]
   (every? #(apply intersect= %) (map vector (element st-el) probe)))
 
 (defn hit? [st-el probe]
