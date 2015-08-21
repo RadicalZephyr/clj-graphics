@@ -162,6 +162,9 @@
   (and (> w x -1)
        (> h y -1)))
 
+(defn extract-kernel [bimg kernel]
+  (mapv #(get2d (width bimg) (image bimg) %) kernel))
+
 ;; (defn dilate-image [bimg [w h :as dim] st-el]
 ;;   (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
 ;;                      pts (for [y (range h)

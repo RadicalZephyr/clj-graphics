@@ -112,6 +112,19 @@
     (is (= (kernel-at st-el [1 0])
            [[1 0] [1 1]]))))
 
+(deftest extract-kernel-test
+  (let [bimg (binary-image [2 2] [1 2 3 4])]
+    (is (= (extract-kernel bimg [[0 0]])
+           [1]))
+    (is (= (extract-kernel bimg [[1 0]])
+           [2]))
+    (is (= (extract-kernel bimg [[0 0] [1 0]])
+           [1 2]))
+    (is (= (extract-kernel bimg [[0 1] [1 1]])
+           [3 4]))
+    (is (= (extract-kernel bimg [[0 0] [1 0] [0 1] [1 1]])
+           [1 2 3 4]))))
+
 ;; (deftest dilation
 ;;   (let [bimg (binary-image [2 2] [1 0 0 0])
 ;;         st-el (structuring-element [1]
