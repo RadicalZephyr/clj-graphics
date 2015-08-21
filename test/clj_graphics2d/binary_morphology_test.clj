@@ -150,6 +150,14 @@
     (is (= (open st-el bimg)
            (binary-image [2 2] [0 0 0 0])))))
 
+(deftest min-and-max-test
+  (let [bimg (binary-image [2 2] [1 0 1 0])
+        zero-image (binary-image [2 2] [0 0 0 0])]
+    (is (= (min bimg zero-image)
+           zero-image))
+    (is (= (max bimg zero-image)
+           bimg))))
+
 (let [bimg (apply (comp vec concat)
                   '((0 0 0 0 0 0 0 0)
                     (1 1 1 1 1 1 1 0)

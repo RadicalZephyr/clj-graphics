@@ -1,4 +1,6 @@
 (ns clj-graphics2d.binary-morphology
+  (:refer-clojure :rename {min core-min
+                           max core-max})
   (:require [clj-graphics2d.util :refer [get2d assoc2d update2d
                                          updating-coll-by]]
             [clojure.string :as str]))
@@ -215,6 +217,28 @@
   (->> bimg
        (erode st-el)
        (dilate st-el)))
+
+(defn min [img-a img-b]
+  (if-let [img-dimensions (and (= (dimensions img-a)
+                                  (dimensions img-b))
+                               (dimensions img-b))]
+    (let [img-a (image img-a)
+          img-b (image img-b)
+          new-img (map core-min img-a img-b)]
+      (binary-image img-dimensions new-img))
+    (throw (IllegalArgumentException.
+            "Min requires images with the same dimensions."))))
+
+(defn max [img-a img-b]
+  (if-let [img-dimensions (and (= (dimensions img-a)
+                                  (dimensions img-b))
+                               (dimensions img-b))]
+    (let [img-a (image img-a)
+          img-b (image img-b)
+          new-img (map core-max img-a img-b)]
+      (binary-image img-dimensions new-img))
+    (throw (IllegalArgumentException.
+            "Max requires images with the same dimensions."))))
 
 (defn get-morphological-op [op-key]
   (case op-key
