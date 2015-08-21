@@ -64,10 +64,10 @@
 
 (defn make-box-st [[w h :as dim] & {:keys [origin]}]
   (structuring-element (vec (take (* w h) (repeat 1)))
-                  :dimensions dim
-                  :origin (or origin
-                              [(quot w 2)
-                               (quot h 2)])))
+                       :dimensions dim
+                       :origin (or origin
+                                   [(quot w 2)
+                                    (quot h 2)])))
 
 (defn- square [x]
   (* x x))
@@ -96,16 +96,16 @@
 (defn make-disk-st [d & {:keys [origin]}]
   (let [r (quot d 2)]
     (structuring-element (make-circle d :filled true)
-                    :dimensions [d d]
-                    :origin (or origin
-                                [r r]))))
+                         :dimensions [d d]
+                         :origin (or origin
+                                     [r r]))))
 
 (defn make-ring-st [d & {:keys [origin]}]
   (let [r (quot d 2)]
     (structuring-element (make-circle d :filled false)
-                    :dimensions [d d]
-                    :origin (or origin
-                                [r r]))))
+                         :dimensions [d d]
+                         :origin (or origin
+                                     [r r]))))
 
 (defn element [structuring-element]
   (:element structuring-element))
