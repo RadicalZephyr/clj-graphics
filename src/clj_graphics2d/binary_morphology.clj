@@ -167,7 +167,10 @@
        (> h y -1)))
 
 (defn extract-kernel [bimg kernel]
-  (mapv #(get2d (width bimg) (image bimg) %) kernel))
+  (mapv #(if (is-in-bounds? (dimensions bimg) %)
+           (get2d (width bimg) (image bimg) %)
+           0)
+        kernel))
 
 (defn structure= [st-bit probe-bit]
   (or (= st-bit 0)
