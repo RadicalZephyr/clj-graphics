@@ -57,7 +57,7 @@
     (is (= (apply rl-encode (apply rl-decode encoded-bits))
            encoded-bits))))
 
-(deftest structural-elements
+(deftest structuring-elements
   (let [st-el (structuring-element [1 1]
                               :origin [1 0]
                               :dimensions [2 1])]

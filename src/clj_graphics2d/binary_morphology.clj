@@ -107,17 +107,17 @@
                     :origin (or origin
                                 [r r]))))
 
-(defn element [structural-element]
-  (:element structural-element))
+(defn element [structuring-element]
+  (:element structuring-element))
 
-(defn origin [structural-element]
-  (:origin structural-element))
+(defn origin [structuring-element]
+  (:origin structuring-element))
 
-(defn origin-x [structural-element]
-  (first (origin structural-element)))
+(defn origin-x [structuring-element]
+  (first (origin structuring-element)))
 
-(defn origin-y [structural-element]
-  (second (origin structural-element)))
+(defn origin-y [structuring-element]
+  (second (origin structuring-element)))
 
 (defn dimensions [element]
   (:dimensions element))
@@ -151,11 +151,11 @@
 ;; Morphological Operations
 ;; ------------------------------------------------------------
 
-(defn kernel-at [structural-element [x y]]
-  (let [oy (origin-y structural-element)
-        ox (origin-x structural-element)]
-    (for [dy (range (height structural-element))
-          dx (range (width structural-element))]
+(defn kernel-at [structuring-element [x y]]
+  (let [oy (origin-y structuring-element)
+        ox (origin-x structuring-element)]
+    (for [dy (range (height structuring-element))
+          dx (range (width structuring-element))]
       [(+ x (- dx ox)) (+ y (- dy ox))])))
 
 (defn is-in-bounds? [[w h] [x y]]
