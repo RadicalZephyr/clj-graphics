@@ -2,7 +2,8 @@
   (:refer-clojure :rename {min core-min
                            max core-max})
   (:require [clj-graphics2d.util :refer [get2d assoc2d update2d
-                                         updating-coll-by]]
+                                         updating-coll-by
+                                         with-partials]]
             [clojure.string :as str]))
 
 ;; ------------------------------------------------------------
@@ -241,18 +242,15 @@
             "Max requires images with the same dimensions."))))
 
 (defn proper-opening [st-el bimg]
-  (let [open  (partial open  st-el)
-        close (partial close st-el)]
+  (with-partials [[open close] st-el]
     (min bimg (close (open (close bimg))))))
 
 (defn proper-closing [st-el bimg]
-  (let [open  (partial open  st-el)
-        close (partial close st-el)]
+  (with-partials [[open close] st-el]
     (max bimg (open (close (open bimg))))))
 
 (defn automedian-filter [st-el bimg]
-  (let [open  (partial open  st-el)
-        close (partial close st-el)]
+  (with-partials [[open close] st-el]
     (max (open (close (open bimg)))
          (min bimg
               (close (open (close bimg)))))))
