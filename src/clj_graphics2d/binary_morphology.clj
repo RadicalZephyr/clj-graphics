@@ -179,6 +179,28 @@
 (defn hit? [st-el probe]
   (boolean (some #(apply intersect= %) (map vector (element st-el) probe))))
 
+(defn min [img-a img-b]
+  (if-let [img-dimensions (and (= (dimensions img-a)
+                                  (dimensions img-b))
+                               (dimensions img-b))]
+    (let [img-a (image img-a)
+          img-b (image img-b)
+          new-img (map core-min img-a img-b)]
+      (binary-image img-dimensions new-img))
+    (throw (IllegalArgumentException.
+            "Min requires images with the same dimensions."))))
+
+(defn max [img-a img-b]
+  (if-let [img-dimensions (and (= (dimensions img-a)
+                                  (dimensions img-b))
+                               (dimensions img-b))]
+    (let [img-a (image img-a)
+          img-b (image img-b)
+          new-img (map core-max img-a img-b)]
+      (binary-image img-dimensions new-img))
+    (throw (IllegalArgumentException.
+            "Max requires images with the same dimensions."))))
+
 (defn dilate-at [st-el bimg coords]
   (let [kernel (kernel-at st-el coords)
         probe  (extract-kernel bimg kernel)]
@@ -186,7 +208,11 @@
       (update-image-at bimg coords 1)
       bimg)))
 
-
+(defn dilate [st-el bimg]
+  (->> (for [y (range (height bimg))
+             x (range (width bimg))] [x y])
+       (map #(dilate-at st-el bimg %))
+       (reduce max bimg)))
 
 ;; (defn dilate-image [bimg [w h :as dim] st-el]
 ;;   (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
@@ -244,28 +270,6 @@
 ;;   (->> bimg
 ;;        (erode st-el)
 ;;        (dilate st-el)))
-
-(defn min [img-a img-b]
-  (if-let [img-dimensions (and (= (dimensions img-a)
-                                  (dimensions img-b))
-                               (dimensions img-b))]
-    (let [img-a (image img-a)
-          img-b (image img-b)
-          new-img (map core-min img-a img-b)]
-      (binary-image img-dimensions new-img))
-    (throw (IllegalArgumentException.
-            "Min requires images with the same dimensions."))))
-
-(defn max [img-a img-b]
-  (if-let [img-dimensions (and (= (dimensions img-a)
-                                  (dimensions img-b))
-                               (dimensions img-b))]
-    (let [img-a (image img-a)
-          img-b (image img-b)
-          new-img (map core-max img-a img-b)]
-      (binary-image img-dimensions new-img))
-    (throw (IllegalArgumentException.
-            "Max requires images with the same dimensions."))))
 
 ;; (defn proper-opening [st-el bimg]
 ;;   (with-partials [[open close] st-el]

@@ -195,19 +195,28 @@
     (is (= (dilate-at st-el bimg [1 0])
            (binary-image [1 2] [1 1])))))
 
-;; (deftest dilation
-;;   (let [bimg (binary-image [2 2] [1 0 0 0])
-;;         st-el (structuring-element [1]
-;;                               :origin [0 0]
-;;                               :dimensions [1 1])]
-;;     (is (= (dilate st-el bimg)
-;;            bimg)))
-;;   (let [bimg (binary-image [2 2] [1 0 0 0])
-;;         st-el (structuring-element [1 1]
-;;                               :origin [0 0]
-;;                               :dimensions [2 1])]
-;;     (is (= (dilate st-el bimg)
-;;            (binary-image [2 2] [1 1 0 0])))))
+(deftest dilation
+  (let [bimg (binary-image [2 2] [1 0 0 0])]
+    (let [st-el (structuring-element [1]
+                                     :origin [0 0]
+                                     :dimensions [1 1])]
+      (is (= (dilate st-el bimg)
+             bimg)))
+    (let [st-el (structuring-element [1 1]
+                                     :origin [1 0]
+                                     :dimensions [2 1])]
+      (is (= (dilate st-el bimg)
+             (binary-image [2 2] [1 1 0 0]))))
+    (let [st-el (structuring-element [1 1]
+                                     :origin [0 0]
+                                     :dimensions [1 2])]
+      (is (= (dilate st-el bimg)
+             bimg)))
+    (let [st-el (structuring-element [1 1]
+                                     :origin [0 1]
+                                     :dimensions [1 2])]
+      (is (= (dilate st-el bimg)
+             (binary-image [2 2] [1 0 1 0]))))))
 
 ;; (deftest erosion
 ;;   (let [bimg (binary-image [2 2] [1 1 0 0])
@@ -241,72 +250,72 @@
     (is (= (max bimg zero-image)
            bimg))))
 
-;; (let [bimg (apply (comp vec concat)
-;;                   '((0 0 0 0 0 0 0 0)
-;;                     (1 1 1 1 1 1 1 0)
-;;                     (0 0 0 1 1 1 1 0)
-;;                     (0 0 0 1 1 1 1 0)
-;;                     (0 0 1 1 1 1 1 0)
-;;                     (0 0 0 1 1 1 1 0)
-;;                     (0 0 1 1 0 0 0 0)
-;;                     (0 0 0 0 0 0 0 0)))
-;;       bimg (binary-image [8 8] bimg)
-;;       st-el (structuring-element [1 1 1
-;;                              1 1 1
-;;                              1 1 1]
-;;                             :origin [1 1]
-;;                             :dimensions [3 3])]
+(let [bimg (apply (comp vec concat)
+                  '((0 0 0 0 0 0 0 0)
+                    (1 1 1 1 1 1 1 0)
+                    (0 0 0 1 1 1 1 0)
+                    (0 0 0 1 1 1 1 0)
+                    (0 0 1 1 1 1 1 0)
+                    (0 0 0 1 1 1 1 0)
+                    (0 0 1 1 0 0 0 0)
+                    (0 0 0 0 0 0 0 0)))
+      bimg (binary-image [8 8] bimg)
+      st-el (structuring-element [1 1 1
+                                  1 1 1
+                                  1 1 1]
+                                 :origin [1 1]
+                                 :dimensions [3 3])]
 
-;;   (deftest basic-morphology
-;;     (testing "dilation"
-;;       (is (= (partition 8
-;;                         (image
-;;                          (dilate st-el bimg)))
-;;              '((1 1 1 1 1 1 1 1)
-;;                (1 1 1 1 1 1 1 1)
-;;                (1 1 1 1 1 1 1 1)
-;;                (0 1 1 1 1 1 1 1)
-;;                (0 1 1 1 1 1 1 1)
-;;                (0 1 1 1 1 1 1 1)
-;;                (0 1 1 1 1 1 1 1)
-;;                (0 1 1 1 1 0 0 0)))))
+  (deftest basic-morphology
+    (testing "dilation"
+      (is (= (partition 8
+                        (image
+                         (dilate st-el bimg)))
+             '((1 1 1 1 1 1 1 1)
+               (1 1 1 1 1 1 1 1)
+               (1 1 1 1 1 1 1 1)
+               (0 1 1 1 1 1 1 1)
+               (0 1 1 1 1 1 1 1)
+               (0 1 1 1 1 1 1 1)
+               (0 1 1 1 1 1 1 1)
+               (0 1 1 1 1 0 0 0)))))
 
-;;     (testing "erosion"
-;;       (is (= (partition 8
-;;                         (image
-;;                          (erode st-el bimg)))
-;;              '((0 0 0 0 0 0 0 0)
-;;                (0 0 0 0 0 0 0 0)
-;;                (0 0 0 0 1 1 0 0)
-;;                (0 0 0 0 1 1 0 0)
-;;                (0 0 0 0 1 1 0 0)
-;;                (0 0 0 0 0 0 0 0)
-;;                (0 0 0 0 0 0 0 0)
-;;                (0 0 0 0 0 0 0 0))))))
+    #_(testing "erosion"
+        (is (= (partition 8
+                          (image
+                           (erode st-el bimg)))
+               '((0 0 0 0 0 0 0 0)
+                 (0 0 0 0 0 0 0 0)
+                 (0 0 0 0 1 1 0 0)
+                 (0 0 0 0 1 1 0 0)
+                 (0 0 0 0 1 1 0 0)
+                 (0 0 0 0 0 0 0 0)
+                 (0 0 0 0 0 0 0 0)
+                 (0 0 0 0 0 0 0 0))))))
 
-;;   (deftest composite-morphology
-;;     (testing "closing"
-;;       (is (= (partition 8
-;;                         (image
-;;                          (close st-el bimg)))
-;;              '((0 0 0 0 0 0 0 0)
-;;                (0 1 1 1 1 1 1 0)
-;;                (0 0 1 1 1 1 1 0)
-;;                (0 0 1 1 1 1 1 0)
-;;                (0 0 1 1 1 1 1 0)
-;;                (0 0 1 1 1 1 1 0)
-;;                (0 0 1 1 0 0 0 0)
-;;                (0 0 0 0 0 0 0 0)))))
+  #_(deftest composite-morphology
+      (testing "closing"
+        (is (= (partition 8
+                          (image
+                           (close st-el bimg)))
+               '((0 0 0 0 0 0 0 0)
+                 (0 1 1 1 1 1 1 0)
+                 (0 0 1 1 1 1 1 0)
+                 (0 0 1 1 1 1 1 0)
+                 (0 0 1 1 1 1 1 0)
+                 (0 0 1 1 1 1 1 0)
+                 (0 0 1 1 0 0 0 0)
+                 (0 0 0 0 0 0 0 0)))))
 
-;;     (testing "opening"
-;;       (is (= (partition 8
-;;                         (image
-;;                          (open st-el bimg)))
-;;              '((0 0 0 0 0 0 0 0)
-;;                (0 0 0 1 1 1 1 0)
-;;                (0 0 0 1 1 1 1 0)
-;;                (0 0 0 1 1 1 1 0)
-;;                (0 0 0 1 1 1 1 0)
-;;                (0 0 0 1 1 1 1 0)
-;;                (0 0 0 0 0 0 0 0)
-;;                (0 0 0 0 0 0 0 0)))))))
+      (testing "opening"
+        (is (= (partition 8
+                          (image
+                           (open st-el bimg)))
+               '((0 0 0 0 0 0 0 0)
+                 (0 0 0 1 1 1 1 0)
+                 (0 0 0 1 1 1 1 0)
+                 (0 0 0 1 1 1 1 0)
+                 (0 0 0 1 1 1 1 0)
+                 (0 0 0 1 1 1 1 0)
+                 (0 0 0 0 0 0 0 0)
+                 (0 0 0 0 0 0 0 0)))))))
