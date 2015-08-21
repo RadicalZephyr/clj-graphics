@@ -207,25 +207,24 @@
                               (= g 1))
                         1 0))))
 
-(defn dilate-at [st-el bimg coords]
+(defn dilate-at [st-el orig-image mod-image coords]
   (let [kernel (kernel-at st-el coords)
-        probe  (extract-kernel bimg kernel)]
+        probe  (extract-kernel orig-image kernel)]
     (if (hit? st-el probe)
-      (update-image-at bimg coords 1)
-      bimg)))
+      (update-image-at mod-image coords 1)
+      mod-image)))
 
 (defn dilate [st-el bimg]
   (->> (for [y (range (height bimg))
              x (range (width bimg))] [x y])
-       (map #(dilate-at st-el bimg %))
-       (reduce max bimg)))
+       (reduce (partial dilate-at st-el bimg) bimg)))
 
-(defn erode-at [st-el bimg coords]
+(defn erode-at [st-el orig-image coords]
   (let [kernel (kernel-at st-el coords)
-        probe  (extract-kernel bimg kernel)]
+        probe  (extract-kernel orig-image kernel)]
     (if (fit? st-el probe)
-      (update-image-at bimg coords 1)
-      (update-image-at bimg coords 0))))
+      (update-image-at orig-image coords 1)
+      (update-image-at orig-image coords 0))))
 
 (defn erode [st-el bimg]
   (->> (for [y (range (height bimg))
