@@ -179,6 +179,15 @@
 (defn hit? [st-el probe]
   (boolean (some #(apply intersect= %) (map vector (element st-el) probe))))
 
+(defn dilate-at [st-el bimg coords]
+  (let [kernel (kernel-at st-el coords)
+        probe  (extract-kernel bimg kernel)]
+    (if (hit? st-el probe)
+      (update-image-at bimg coords 1)
+      bimg)))
+
+
+
 ;; (defn dilate-image [bimg [w h :as dim] st-el]
 ;;   (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
 ;;                      pts (for [y (range h)

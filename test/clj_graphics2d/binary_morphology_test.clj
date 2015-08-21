@@ -167,6 +167,34 @@
     (is (= (intersect? st-el [1 1 1])
            true))))
 
+(deftest dilate-at-test
+  (let [st-el (structuring-element [1 1]
+                                   :origin [1 0]
+                                   :dimensions [2 1])
+        bimg (binary-image [2 1] [0 1])]
+    (is (= (dilate-at st-el bimg [0 0])
+           (binary-image [2 1] [0 1]))))
+  (let [st-el (structuring-element [1 1]
+                                   :origin [0 0]
+                                   :dimensions [2 1])
+        bimg (binary-image [2 1] [0 1])]
+    (is (= (dilate-at st-el bimg [0 0])
+           (binary-image [2 1] [1 1]))))
+  (let [st-el (structuring-element [1 1]
+                                   :origin [1 0]
+                                   :dimensions [2 1])
+        bimg (binary-image [2 1] [1 0])]
+    (is (= (dilate-at st-el bimg [1 0])
+           (binary-image [2 1] [1 1]))))
+  (let [st-el (structuring-element [1 1]
+                                   :origin [1 0]
+                                   :dimensions [1 2])
+        bimg (binary-image [1 2] [1 0])]
+    (is (= (dilate-at st-el bimg [0 0])
+           (binary-image [1 2] [1 0])))
+    (is (= (dilate-at st-el bimg [1 0])
+           (binary-image [1 2] [1 1])))))
+
 ;; (deftest dilation
 ;;   (let [bimg (binary-image [2 2] [1 0 0 0])
 ;;         st-el (structuring-element [1]
