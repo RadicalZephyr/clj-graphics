@@ -23,13 +23,13 @@
               `(~fn-name (partial ~fn-name ~@args)))
             fn-names)))
 
-(defn make-bindings [bindings]
+(defn make-partial-bindings [bindings]
   (->> bindings
        (partition 2)
        (mapcat make-partial-binding)))
 
 (defmacro with-partials [bindings & body]
-  (let [binding-pairs (make-bindings bindings)]
+  (let [binding-pairs (make-partial-bindings bindings)]
     `(let ~(vec binding-pairs)
        ~@body)))
 

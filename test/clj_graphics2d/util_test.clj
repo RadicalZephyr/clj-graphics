@@ -16,15 +16,15 @@
            '[fun1 (clojure.core/partial fun1 arg1 arg2)
              fun2 (clojure.core/partial fun2 arg1 arg2)])))
 
-  (testing "make-bindings"
-    (is (= (make-bindings ['thing 'arg])
+  (testing "make-partial-bindings"
+    (is (= (make-partial-bindings ['thing 'arg])
            '[thing (clojure.core/partial thing arg)]))
-    (is (= (make-bindings '[fake-fun [arg1 arg2 arg3]])
+    (is (= (make-partial-bindings '[fake-fun [arg1 arg2 arg3]])
            '[fake-fun (clojure.core/partial fake-fun arg1 arg2 arg3)]))
-    (is (= (make-bindings '[[fun1 fun2] arg])
+    (is (= (make-partial-bindings '[[fun1 fun2] arg])
            '[fun1 (clojure.core/partial fun1 arg)
              fun2 (clojure.core/partial fun2 arg)]))
-    (is (= (make-bindings '[thing       arg
+    (is (= (make-partial-bindings '[thing       arg
                             [fun1 fun2] [arg1 arg2]])
            '[thing (clojure.core/partial thing arg)
              fun1 (clojure.core/partial fun1 arg1 arg2)
