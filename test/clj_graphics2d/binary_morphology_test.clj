@@ -265,21 +265,21 @@
     (is (= (erode st-el bimg)
            (binary-image [2 2] [1 0 1 0])))))
 
-;; (deftest closure
-;;   (let [bimg (binary-image [2 2] [1 0 0 0])
-;;         st-el (structuring-element [1 1]
-;;                               :origin [0 0]
-;;                               :dimensions [2 1])]
-;;     (is (= (close st-el bimg)
-;;            bimg))))
+(deftest closure
+  (let [bimg (binary-image [2 2] [1 0 0 0])
+        st-el (structuring-element [1 1]
+                              :origin [0 0]
+                              :dimensions [2 1])]
+    (is (= (close st-el bimg)
+           (binary-image [2 2] [0 0 0 0])))))
 
-;; (deftest opening
-;;   (let [bimg (binary-image [2 2] [1 0 0 0])
-;;         st-el (structuring-element [1 1]
-;;                               :origin [0 0]
-;;                               :dimensions [2 1])]
-;;     (is (= (open st-el bimg)
-;;            (binary-image [2 2] [0 0 0 0])))))
+(deftest opening
+  (let [bimg (binary-image [2 2] [1 0 0 0])
+        st-el (structuring-element [1 1]
+                              :origin [0 0]
+                              :dimensions [2 1])]
+    (is (= (open st-el bimg)
+           (binary-image [2 2] [0 0 0 0])))))
 
 (deftest min-and-max-test
   (let [bimg (binary-image [2 2] [1 0 1 0])
@@ -319,42 +319,42 @@
                (0 1 1 1 1 1 1 1)
                (0 1 1 1 1 0 0 0)))))
 
-    #_(testing "erosion"
-        (is (= (partition 8
-                          (image
-                           (erode st-el bimg)))
-               '((0 0 0 0 0 0 0 0)
-                 (0 0 0 0 0 0 0 0)
-                 (0 0 0 0 1 1 0 0)
-                 (0 0 0 0 1 1 0 0)
-                 (0 0 0 0 1 1 0 0)
-                 (0 0 0 0 0 0 0 0)
-                 (0 0 0 0 0 0 0 0)
-                 (0 0 0 0 0 0 0 0))))))
+    (testing "erosion"
+      (is (= (partition 8
+                        (image
+                         (erode st-el bimg)))
+             '((0 0 0 0 0 0 0 0)
+               (0 0 0 0 0 0 0 0)
+               (0 0 0 0 1 1 0 0)
+               (0 0 0 0 1 1 0 0)
+               (0 0 0 0 1 1 0 0)
+               (0 0 0 0 0 0 0 0)
+               (0 0 0 0 0 0 0 0)
+               (0 0 0 0 0 0 0 0))))))
 
-  #_(deftest composite-morphology
-      (testing "closing"
-        (is (= (partition 8
-                          (image
-                           (close st-el bimg)))
-               '((0 0 0 0 0 0 0 0)
-                 (0 1 1 1 1 1 1 0)
-                 (0 0 1 1 1 1 1 0)
-                 (0 0 1 1 1 1 1 0)
-                 (0 0 1 1 1 1 1 0)
-                 (0 0 1 1 1 1 1 0)
-                 (0 0 1 1 0 0 0 0)
-                 (0 0 0 0 0 0 0 0)))))
+  (deftest composite-morphology
+    (testing "closing"
+      (is (= (partition 8
+                        (image
+                         (close st-el bimg)))
+             '((0 0 0 0 0 0 0 0)
+               (0 1 1 1 1 1 1 0)
+               (0 0 1 1 1 1 1 0)
+               (0 0 1 1 1 1 1 0)
+               (0 0 1 1 1 1 1 0)
+               (0 0 1 1 1 1 1 0)
+               (0 0 1 1 0 0 0 0)
+               (0 0 0 0 0 0 0 0)))))
 
-      (testing "opening"
-        (is (= (partition 8
-                          (image
-                           (open st-el bimg)))
-               '((0 0 0 0 0 0 0 0)
-                 (0 0 0 1 1 1 1 0)
-                 (0 0 0 1 1 1 1 0)
-                 (0 0 0 1 1 1 1 0)
-                 (0 0 0 1 1 1 1 0)
-                 (0 0 0 1 1 1 1 0)
-                 (0 0 0 0 0 0 0 0)
-                 (0 0 0 0 0 0 0 0)))))))
+    (testing "opening"
+      (is (= (partition 8
+                        (image
+                         (open st-el bimg)))
+             '((0 0 0 0 0 0 0 0)
+               (0 0 0 1 1 1 1 0)
+               (0 0 0 1 1 1 1 0)
+               (0 0 0 1 1 1 1 0)
+               (0 0 0 1 1 1 1 0)
+               (0 0 0 1 1 1 1 0)
+               (0 0 0 0 0 0 0 0)
+               (0 0 0 0 0 0 0 0)))))))
