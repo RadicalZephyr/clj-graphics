@@ -172,6 +172,9 @@
 (defn intersect? [st-el probe]
   (every? #(apply intersect= %) (map vector (element st-el) probe)))
 
+(defn hit? [st-el probe]
+  (boolean (some #(apply intersect= %) (map vector (element st-el) probe))))
+
 ;; (defn dilate-image [bimg [w h :as dim] st-el]
 ;;   (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
 ;;                      pts (for [y (range h)

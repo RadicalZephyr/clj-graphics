@@ -139,6 +139,20 @@
     (is (= (intersect? st-el [1 1 1])
            true))))
 
+(deftest hit?-test
+  (let [st-el (structuring-element [1 1]
+                                   :origin [0 0]
+                                   :dimensions [2 1])]
+    (is (= (hit? st-el [1 1])
+           true))
+    (is (= (hit? st-el [0 0])
+           false)))
+  (let [st-el (structuring-element [0 1 0]
+                                   :origin [1 0]
+                                   :dimensions [3 1])]
+    (is (= (intersect? st-el [1 1 1])
+           true))))
+
 ;; (deftest dilation
 ;;   (let [bimg (binary-image [2 2] [1 0 0 0])
 ;;         st-el (structuring-element [1]
