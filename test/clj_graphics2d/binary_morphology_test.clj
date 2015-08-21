@@ -2,7 +2,6 @@
   (:require [clj-graphics2d.binary-morphology :refer :all]
             [clojure.test :refer :all]))
 
-
 (deftest rl-decode-test
   (testing "single bits"
     (is (= (rl-decode 0)
@@ -59,8 +58,8 @@
 
 (deftest structuring-elements
   (let [st-el (structuring-element [1 1]
-                              :origin [1 0]
-                              :dimensions [2 1])]
+                                   :origin [1 0]
+                                   :dimensions [2 1])]
     (is (= (element st-el)
            [1 1]))
     (is (= (origin st-el)
@@ -240,8 +239,8 @@
            (binary-image [2 1] [0 0])))
 
     (let [bimg (binary-image [2 2] [1 1 1 1])]
-     (is (= (erode-at st-el bimg [1 0])
-            (binary-image [2 2] [1 0 1 1]))))))
+      (is (= (erode-at st-el bimg [1 0])
+             (binary-image [2 2] [1 0 1 1]))))))
 
 (deftest erosion
   (let [st-el (structuring-element [1 1]
@@ -268,16 +267,16 @@
 (deftest closure
   (let [bimg (binary-image [2 2] [1 0 0 0])
         st-el (structuring-element [1 1]
-                              :origin [0 0]
-                              :dimensions [2 1])]
+                                   :origin [0 0]
+                                   :dimensions [2 1])]
     (is (= (close st-el bimg)
            (binary-image [2 2] [0 0 0 0])))))
 
 (deftest opening
   (let [bimg (binary-image [2 2] [1 0 0 0])
         st-el (structuring-element [1 1]
-                              :origin [0 0]
-                              :dimensions [2 1])]
+                                   :origin [0 0]
+                                   :dimensions [2 1])]
     (is (= (open st-el bimg)
            (binary-image [2 2] [0 0 0 0])))))
 
