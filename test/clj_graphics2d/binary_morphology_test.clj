@@ -286,7 +286,36 @@
     (is (= (min bimg zero-image)
            zero-image))
     (is (= (max bimg zero-image)
-           bimg))))
+           bimg))
+    (is (= (intersection bimg zero-image)
+           zero-image))
+    (is (= (union bimg zero-image)
+           bimg)))
+
+  (let [img-f (binary-image [4 4] [0 0 0 0
+                                   1 1 0 0
+                                   0 0 1 1
+                                   0 0 0 0])
+        img-g (binary-image [4 4] [0 0 0 0
+                                   0 1 1 1
+                                   1 1 1 0
+                                   0 0 0 0])]
+    (let [intersect-img (binary-image [4 4] [0 0 0 0
+                                             0 1 0 0
+                                             0 0 1 0
+                                             0 0 0 0])]
+      (is (= (intersection img-f img-g)
+             intersect-img))
+      (is (= (min img-f img-g)
+             intersect-img)))
+    (let [union-img (binary-image [4 4] [0 0 0 0
+                                         1 1 1 1
+                                         1 1 1 1
+                                         0 0 0 0])]
+      (is (= (union img-f img-g)
+             union-img))
+      (is (= (max img-f img-g)
+             union-img)))))
 
 (let [bimg (apply (comp vec concat)
                   '((0 0 0 0 0 0 0 0)

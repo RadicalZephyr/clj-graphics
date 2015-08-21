@@ -197,6 +197,16 @@
 
 (def max (partial binary-bit-op core-max))
 
+(def intersection (partial binary-bit-op
+                           (fn [f g]
+                             (if (= 1 f g) 1 0))))
+
+(def union (partial binary-bit-op
+                    (fn [f g]
+                      (if (or (= f 1)
+                              (= g 1))
+                        1 0))))
+
 (defn dilate-at [st-el bimg coords]
   (let [kernel (kernel-at st-el coords)
         probe  (extract-kernel bimg kernel)]
