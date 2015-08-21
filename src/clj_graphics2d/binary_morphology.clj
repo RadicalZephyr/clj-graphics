@@ -169,15 +169,15 @@
 (defn extract-kernel [bimg kernel]
   (mapv #(get2d (width bimg) (image bimg) %) kernel))
 
-(defn intersect= [st-bit probe-bit]
+(defn structure= [st-bit probe-bit]
   (or (= st-bit 0)
       (= st-bit probe-bit)))
 
 (defn fit? [st-el probe]
-  (every? #(apply intersect= %) (map vector (element st-el) probe)))
+  (every? #(apply structure= %) (map vector (element st-el) probe)))
 
 (defn hit? [st-el probe]
-  (boolean (some #(apply intersect= %) (map vector (element st-el) probe))))
+  (boolean (some #(apply structure= %) (map vector (element st-el) probe))))
 
 (defn min [img-a img-b]
   (if-let [img-dimensions (and (= (dimensions img-a)
