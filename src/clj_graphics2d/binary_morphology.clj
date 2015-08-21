@@ -219,18 +219,17 @@
              x (range (width bimg))] [x y])
        (reduce (partial dilate-at st-el bimg) bimg)))
 
-(defn erode-at [st-el orig-image coords]
+(defn erode-at [st-el orig-image mod-image coords]
   (let [kernel (kernel-at st-el coords)
         probe  (extract-kernel orig-image kernel)]
     (if (fit? st-el probe)
-      (update-image-at orig-image coords 1)
-      (update-image-at orig-image coords 0))))
+      (update-image-at mod-image coords 1)
+      (update-image-at mod-image coords 0))))
 
 (defn erode [st-el bimg]
   (->> (for [y (range (height bimg))
              x (range (width bimg))] [x y])
-       (map #(erode-at st-el bimg %))
-       (reduce min bimg)))
+       (reduce (partial erode-at st-el bimg) bimg)))
 
 (defn close [st-el bimg]
   (->> bimg
