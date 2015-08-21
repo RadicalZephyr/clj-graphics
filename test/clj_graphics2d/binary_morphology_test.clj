@@ -103,6 +103,7 @@
            [[0 0]]))
     (is (= (kernel-at st-el [0 1])
            [[0 1]])))
+
   (let [st-el (structuring-element [1 0]
                                    :origin [0 0]
                                    :dimensions [2 1])]
@@ -110,6 +111,7 @@
            [[0 0] [1 0]]))
     (is (= (kernel-at st-el [0 1])
            [[0 1] [1 1]])))
+
   (let [st-el (structuring-element [1 0]
                                    :origin [0 0]
                                    :dimensions [1 2])]
@@ -117,6 +119,7 @@
            [[0 0] [0 1]]))
     (is (= (kernel-at st-el [1 0])
            [[1 0] [1 1]])))
+
   (let [st-el (structuring-element [1 0]
                                    :origin [1 0]
                                    :dimensions [2 1])]
@@ -124,11 +127,18 @@
            [[-1 0] [0 0]]))
     (is (= (kernel-at st-el [1 0])
            [[0 0] [1 0]])))
+
   (let [st-el (structuring-element [1 1]
                                    :origin [0 0]
                                    :dimensions [2 1])]
     (is (= (kernel-at st-el [1 0])
-           [[1 0] [2 0]]))))
+           [[1 0] [2 0]])))
+
+  (let [st-el (structuring-element [1 1]
+                                   :origin [1 0]
+                                   :dimensions [2 1])]
+    (is (= (kernel-at st-el [0 0])
+           [[-1 0] [0 0]]))))
 
 (deftest extract-kernel-test
   (let [bimg (binary-image [2 2] [1 2 3 4])]
@@ -143,7 +153,9 @@
     (is (= (extract-kernel bimg [[0 0] [1 0] [0 1] [1 1]])
            [1 2 3 4]))
     (is (= (extract-kernel bimg [[1 0] [2 0]])
-           [2 0]))))
+           [2 0]))
+    (is (= (extract-kernel bimg [[-1 0] [0 0]])
+           [0 1]))))
 
 (deftest fit?-test
   (let [st-el (structuring-element [1 1]
