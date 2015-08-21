@@ -214,6 +214,13 @@
        (map #(dilate-at st-el bimg %))
        (reduce max bimg)))
 
+(defn erode-at [st-el bimg coords]
+  (let [kernel (kernel-at st-el coords)
+        probe  (extract-kernel bimg kernel)]
+    (if (fit? st-el probe)
+      (update-image-at bimg coords 1)
+      (update-image-at bimg coords 0))))
+
 ;; (defn dilate-image [bimg [w h :as dim] st-el]
 ;;   (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
 ;;                      pts (for [y (range h)
