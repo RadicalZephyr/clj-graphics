@@ -240,6 +240,23 @@
     (throw (IllegalArgumentException.
             "Max requires images with the same dimensions."))))
 
+(defn proper-opening [st-el bimg]
+  (let [open  (partial open  st-el)
+        close (partial close st-el)]
+    (min bimg (close (open (close bimg))))))
+
+(defn proper-closing [st-el bimg]
+  (let [open  (partial open  st-el)
+        close (partial close st-el)]
+    (max bimg (open (close (open bimg))))))
+
+(defn automedian-filter [st-el bimg]
+  (let [open  (partial open  st-el)
+        close (partial close st-el)]
+    (max (open (close (open bimg)))
+         (min bimg
+              (close (open (close bimg)))))))
+
 (defn get-morphological-op [op-key]
   (case op-key
     :dilate  dilate
