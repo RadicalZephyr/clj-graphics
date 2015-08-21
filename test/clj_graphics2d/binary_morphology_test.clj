@@ -89,6 +89,13 @@
     (is (= (with-out-str (display-image bimg))
            "1 1\n0 0\n"))))
 
+(deftest update-image-at-test
+  (let [bimg (binary-image [2 2] [0 0 0 0])]
+    (is (= (update-image-at bimg [0 0] 1)
+           (binary-image [2 2] [1 0 0 0])))
+    (is (= (update-image-at bimg [1 0] 1)
+           (binary-image [2 2] [0 1 0 0])))))
+
 (deftest structured-element-kernel-test
   (let [st-el (structuring-element [1]
                               :origin [0 0]

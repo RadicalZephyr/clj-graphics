@@ -146,6 +146,10 @@
                 (map #(str/join " " %))
                 (str/join "\n"))))
 
+(defn update-image-at [bimg coords value]
+  (binary-image (dimensions bimg)
+                (assoc2d (width bimg) (image bimg) coords value)))
+
 
 ;; ------------------------------------------------------------
 ;; Morphological Operations
