@@ -317,6 +317,22 @@
       (is (= (max img-f img-g)
              union-img)))))
 
+(deftest erode-error-case-test
+  (is (= (partition 4
+                        (image
+                         (erode (structuring-element [0 1 1 0]
+                                                     :origin [0 1]
+                                                     :dimensions [1 4])
+                                (binary-image [4 4]
+                                              [0 0 0 0
+                                               1 1 1 1
+                                               1 1 1 1
+                                               0 0 0 0]))))
+             [[0 0 0 0]
+              [1 1 1 1]
+              [0 0 0 0]
+              [0 0 0 0]])))
+
 (let [bimg (apply (comp vec concat)
                   '((0 0 0 0 0 0 0 0)
                     (1 1 1 1 1 1 1 0)
