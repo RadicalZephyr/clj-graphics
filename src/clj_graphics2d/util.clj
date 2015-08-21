@@ -11,6 +11,28 @@
        ~@forms
        (finally (~close-fn ~binding)))))
 
+(defn as-seq [arg]
+  (if (sequential? arg)
+    arg
+    [arg]))
+
+(defn make-partial-binding [[fn-names args]]
+  (let [fn-names (as-seq fn-names)
+        args     (as-seq args)]
+    (mapcat (fn [fn-name]
+              `(~fn-name (partial ~fn-name ~@args)))
+            fn-names)))
+
+(defn make-bindings [bindings]
+  (->> bindings
+       (partition 2)
+       (mapcat make-partial-binding)))
+
+(defmacro with-partials [bindings & body]
+  (let [binding-pairs (make-bindings bindings)]
+    `(let ~(vec binding-pairs)
+       ~@body)))
+
 (defmacro ->interleave [x inter-fn & forms]
   `(let [~'wrapped-fn (fn [~'i]
                         ~(if (seq? inter-fn)

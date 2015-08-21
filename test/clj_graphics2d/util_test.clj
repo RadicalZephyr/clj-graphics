@@ -3,6 +3,43 @@
             [clj-graphics2d.util :refer :all])
   (:import java.awt.image.BufferedImage))
 
+(deftest with-partials-test
+  (testing "make-partial-binding"
+    (is (= (make-partial-binding '[thing arg])
+           '(thing (clojure.core/partial thing arg))))
+    (is (= (make-partial-binding '[thing [arg1 arg2]])
+           '(thing (clojure.core/partial thing arg1 arg2))))
+    (is (= (make-partial-binding '[[fun1 fun2] arg])
+           '[fun1 (clojure.core/partial fun1 arg)
+             fun2 (clojure.core/partial fun2 arg)]))
+    (is (= (make-partial-binding '[[fun1 fun2] [arg1 arg2]])
+           '[fun1 (clojure.core/partial fun1 arg1 arg2)
+             fun2 (clojure.core/partial fun2 arg1 arg2)])))
+
+  (testing "make-bindings"
+    (is (= (make-bindings ['thing 'arg])
+           '[thing (clojure.core/partial thing arg)]))
+    (is (= (make-bindings '[fake-fun [arg1 arg2 arg3]])
+           '[fake-fun (clojure.core/partial fake-fun arg1 arg2 arg3)]))
+    (is (= (make-bindings '[[fun1 fun2] arg])
+           '[fun1 (clojure.core/partial fun1 arg)
+             fun2 (clojure.core/partial fun2 arg)]))
+    (is (= (make-bindings '[thing       arg
+                            [fun1 fun2] [arg1 arg2]])
+           '[thing (clojure.core/partial thing arg)
+             fun1 (clojure.core/partial fun1 arg1 arg2)
+             fun2 (clojure.core/partial fun2 arg1 arg2)])))
+
+  (testing "with-partials"
+    (is (= (macroexpand-1 '(with-partials [open st-el]
+                             (dummy-body (open img))))
+           '(clojure.core/let [open (clojure.core/partial open st-el)]
+              (dummy-body (open img)))))
+    (is (= (macroexpand-1 '(with-partials [[open close] st-el]
+                             (dummy-body (open img))))
+           '(clojure.core/let [open (clojure.core/partial open st-el)
+                               close (clojure.core/partial close st-el)]
+              (dummy-body (open img)))))))
 
 (deftest op2d-test
   (testing "get2d"
