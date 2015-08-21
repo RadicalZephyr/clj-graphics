@@ -260,4 +260,7 @@
     :erode   erode
     :open    open
     :close   close
+    :proper-opening proper-opening
+    :proper-closing proper-closing
+    :automedian-filter automedian-filter
     identity))
