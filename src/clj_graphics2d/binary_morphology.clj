@@ -160,7 +160,7 @@
         ox (origin-x structuring-element)]
     (for [dy (range (height structuring-element))
           dx (range (width structuring-element))]
-      [(+ x (- dx ox)) (+ y (- dy ox))])))
+      [(+ x (- dx ox)) (+ y (- dy oy))])))
 
 (defn is-in-bounds? [[w h] [x y]]
   (and (> w x -1)
