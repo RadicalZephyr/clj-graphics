@@ -182,27 +182,20 @@
 (defn hit? [st-el probe]
   (boolean (some #(apply structure= %) (map vector (element st-el) probe))))
 
-(defn min [img-a img-b]
+(defn binary-bit-op [op img-a img-b]
   (if-let [img-dimensions (and (= (dimensions img-a)
                                   (dimensions img-b))
                                (dimensions img-b))]
     (let [img-a (image img-a)
           img-b (image img-b)
-          new-img (mapv core-min img-a img-b)]
+          new-img (mapv op img-a img-b)]
       (binary-image img-dimensions new-img))
     (throw (IllegalArgumentException.
-            "Min requires images with the same dimensions."))))
+            "Binary image operations require images with the same dimensions."))))
 
-(defn max [img-a img-b]
-  (if-let [img-dimensions (and (= (dimensions img-a)
-                                  (dimensions img-b))
-                               (dimensions img-b))]
-    (let [img-a (image img-a)
-          img-b (image img-b)
-          new-img (mapv core-max img-a img-b)]
-      (binary-image img-dimensions new-img))
-    (throw (IllegalArgumentException.
-            "Max requires images with the same dimensions."))))
+(def min (partial binary-bit-op core-min))
+
+(def max (partial binary-bit-op core-max))
 
 (defn dilate-at [st-el bimg coords]
   (let [kernel (kernel-at st-el coords)
