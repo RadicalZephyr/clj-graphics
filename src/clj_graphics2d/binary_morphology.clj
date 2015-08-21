@@ -165,6 +165,13 @@
 (defn extract-kernel [bimg kernel]
   (mapv #(get2d (width bimg) (image bimg) %) kernel))
 
+(defn intersect= [st-bit probe-bit]
+  (or (= st-bit 0)
+      (= st-bit probe-bit)))
+
+(defn intersect? [st-el probe]
+  (every? #(apply intersect= %) (map vector (element st-el) probe)))
+
 ;; (defn dilate-image [bimg [w h :as dim] st-el]
 ;;   (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
 ;;                      pts (for [y (range h)
