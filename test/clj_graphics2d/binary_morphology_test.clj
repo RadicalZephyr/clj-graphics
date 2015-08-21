@@ -5,10 +5,10 @@
 
 (deftest rl-decode-test
   (testing "single bits"
-   (is (= (rl-decode 0)
-          [0]))
-   (is (= (rl-decode 1)
-          [1])))
+    (is (= (rl-decode 0)
+           [0]))
+    (is (= (rl-decode 1)
+           [1])))
   (testing "multiple specific bits"
     (is (= (rl-decode 0 1 0)
            [0 1 0])))
