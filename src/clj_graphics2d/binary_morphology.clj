@@ -207,24 +207,21 @@
                               (= g 1))
                         1 0))))
 
-(defn dilate-at [st-el orig-image mod-image coords]
-  (let [kernel (kernel-at st-el coords)
-        probe  (extract-kernel orig-image kernel)]
-    (if (hit? st-el probe)
-      (update-image-at mod-image coords 1)
-      (update-image-at mod-image coords 0))))
+(defmacro def-morph-op [name predicate]
+  `(defn ~name [st-el# orig-image# mod-image# coords#]
+     (let [kernel# (kernel-at st-el# coords#)
+           probe#  (extract-kernel orig-image# kernel#)]
+       (if (~predicate st-el# probe#)
+         (update-image-at mod-image# coords# 1)
+         (update-image-at mod-image# coords# 0)))))
+
+(def-morph-op dilate-at hit?)
+(def-morph-op  erode-at fit?)
 
 (defn dilate [st-el bimg]
   (->> (for [y (range (height bimg))
              x (range (width bimg))] [x y])
        (reduce (partial dilate-at st-el bimg) bimg)))
-
-(defn erode-at [st-el orig-image mod-image coords]
-  (let [kernel (kernel-at st-el coords)
-        probe  (extract-kernel orig-image kernel)]
-    (if (fit? st-el probe)
-      (update-image-at mod-image coords 1)
-      (update-image-at mod-image coords 0))))
 
 (defn erode [st-el bimg]
   (->> (for [y (range (height bimg))
