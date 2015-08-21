@@ -212,7 +212,7 @@
         probe  (extract-kernel orig-image kernel)]
     (if (hit? st-el probe)
       (update-image-at mod-image coords 1)
-      mod-image)))
+      (update-image-at mod-image coords 0))))
 
 (defn dilate [st-el bimg]
   (->> (for [y (range (height bimg))

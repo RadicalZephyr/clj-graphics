@@ -177,6 +177,8 @@
                                    :dimensions [2 1])]
     (is (= (hit? st-el [1 1])
            true))
+    (is (= (hit? st-el [0 1])
+           true))
     (is (= (hit? st-el [0 0])
            false)))
   (let [st-el (structuring-element [0 1 0]
@@ -206,7 +208,7 @@
            (binary-image [2 1] [1 1]))))
   (let [st-el (structuring-element [1 1]
                                    :origin [1 0]
-                                   :dimensions [1 2])
+                                   :dimensions [2 1])
         bimg (binary-image [1 2] [1 0])]
     (is (= (dilate-at st-el bimg bimg [0 0])
            (binary-image [1 2] [1 0])))
