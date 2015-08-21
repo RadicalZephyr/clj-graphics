@@ -162,62 +162,62 @@
   (and (> w x -1)
        (> h y -1)))
 
-(defn dilate-image [bimg [w h :as dim] st-el]
-  (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
-                     pts (for [y (range h)
-                               x (range w)] [x y])
-                     :head-as pt
-                     :when (= (get2d w bimg pt)
-                              1)]
-    (->> pt
-         (kernel-at st-el)
-         (map vector (:element st-el))
-         (reduce (fn [img [val pt]]
-                   (if (is-in-bounds? dim pt)
-                     (update2d w img pt
-                               bit-or val)
-                     img))
-                 output-img))))
+;; (defn dilate-image [bimg [w h :as dim] st-el]
+;;   (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
+;;                      pts (for [y (range h)
+;;                                x (range w)] [x y])
+;;                      :head-as pt
+;;                      :when (= (get2d w bimg pt)
+;;                               1)]
+;;     (->> pt
+;;          (kernel-at st-el)
+;;          (map vector (:element st-el))
+;;          (reduce (fn [img [val pt]]
+;;                    (if (is-in-bounds? dim pt)
+;;                      (update2d w img pt
+;;                                bit-or val)
+;;                      img))
+;;                  output-img))))
 
-(defn dilate [st-el bimg]
-  (let [img-dimensions (dimensions bimg)
-        img (image bimg)
-        new-img (dilate-image img img-dimensions st-el)]
-    (binary-image img-dimensions new-img)))
+;; (defn dilate [st-el bimg]
+;;   (let [img-dimensions (dimensions bimg)
+;;         img (image bimg)
+;;         new-img (dilate-image img img-dimensions st-el)]
+;;     (binary-image img-dimensions new-img)))
 
-(defn erode-match [bimg [w _] {:keys [element] :as st-el} pt]
-  (->> pt
-       (kernel-at st-el)
-       (map (fn [val pt]
-              (if (= val 1)
-                (= (get2d w bimg pt)
-                   1)
-                true)) element)
-       (every? identity)))
+;; (defn erode-match [bimg [w _] {:keys [element] :as st-el} pt]
+;;   (->> pt
+;;        (kernel-at st-el)
+;;        (map (fn [val pt]
+;;               (if (= val 1)
+;;                 (= (get2d w bimg pt)
+;;                    1)
+;;                 true)) element)
+;;        (every? identity)))
 
-(defn erode-image [bimg [w h :as dim] st-el]
-  (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
-                     pts (for [y (range h)
-                               x (range w)] [x y])
-                     :head-as pt
-                     :when (erode-match bimg dim st-el pt)]
-    (assoc2d w output-img pt 1)))
+;; (defn erode-image [bimg [w h :as dim] st-el]
+;;   (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
+;;                      pts (for [y (range h)
+;;                                x (range w)] [x y])
+;;                      :head-as pt
+;;                      :when (erode-match bimg dim st-el pt)]
+;;     (assoc2d w output-img pt 1)))
 
-(defn erode [st-el bimg]
-  (let [img-dimensions (dimensions bimg)
-        img (image bimg)
-        new-img (erode-image img img-dimensions st-el)]
-    (binary-image img-dimensions new-img)))
+;; (defn erode [st-el bimg]
+;;   (let [img-dimensions (dimensions bimg)
+;;         img (image bimg)
+;;         new-img (erode-image img img-dimensions st-el)]
+;;     (binary-image img-dimensions new-img)))
 
-(defn close [st-el bimg]
-  (->> bimg
-       (dilate st-el)
-       (erode st-el)))
+;; (defn close [st-el bimg]
+;;   (->> bimg
+;;        (dilate st-el)
+;;        (erode st-el)))
 
-(defn open [st-el bimg]
-  (->> bimg
-       (erode st-el)
-       (dilate st-el)))
+;; (defn open [st-el bimg]
+;;   (->> bimg
+;;        (erode st-el)
+;;        (dilate st-el)))
 
 (defn min [img-a img-b]
   (if-let [img-dimensions (and (= (dimensions img-a)
@@ -241,22 +241,22 @@
     (throw (IllegalArgumentException.
             "Max requires images with the same dimensions."))))
 
-(defn proper-opening [st-el bimg]
-  (with-partials [[open close] st-el]
-    (min bimg (close (open (close bimg))))))
+;; (defn proper-opening [st-el bimg]
+;;   (with-partials [[open close] st-el]
+;;     (min bimg (close (open (close bimg))))))
 
-(defn proper-closing [st-el bimg]
-  (with-partials [[open close] st-el]
-    (max bimg (open (close (open bimg))))))
+;; (defn proper-closing [st-el bimg]
+;;   (with-partials [[open close] st-el]
+;;     (max bimg (open (close (open bimg))))))
 
-(defn automedian-filter [st-el bimg]
-  (with-partials [[open close] st-el]
-    (max (open (close (open bimg)))
-         (min bimg
-              (close (open (close bimg)))))))
+;; (defn automedian-filter [st-el bimg]
+;;   (with-partials [[open close] st-el]
+;;     (max (open (close (open bimg)))
+;;          (min bimg
+;;               (close (open (close bimg)))))))
 
 (defn get-morphological-op [op-key]
-  (case op-key
+  #_(case op-key
     :dilate  dilate
     :erode   erode
     :open    open
