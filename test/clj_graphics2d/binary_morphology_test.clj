@@ -58,7 +58,7 @@
            encoded-bits))))
 
 (deftest structural-elements
-  (let [st-el (make-custom-st [1 1]
+  (let [st-el (structuring-element [1 1]
                               :origin [1 0]
                               :dimensions [2 1])]
     (is (= (element st-el)
@@ -90,21 +90,21 @@
            "1 1\n0 0\n"))))
 
 (deftest structured-element-kernel-test
-  (let [st-el (make-custom-st [1]
+  (let [st-el (structuring-element [1]
                               :origin [0 0]
                               :dimensions [1 1])]
     (is (= (kernel-at st-el [0 0])
            [[0 0]]))
     (is (= (kernel-at st-el [0 1])
            [[0 1]])))
-  (let [st-el (make-custom-st [1 0]
+  (let [st-el (structuring-element [1 0]
                               :origin [0 0]
                               :dimensions [2 1])]
     (is (= (kernel-at st-el [0 0])
            [[0 0] [1 0]]))
     (is (= (kernel-at st-el [0 1])
            [[0 1] [1 1]])))
-  (let [st-el (make-custom-st [1 0]
+  (let [st-el (structuring-element [1 0]
                               :origin [0 0]
                               :dimensions [1 2])]
     (is (= (kernel-at st-el [0 0])
@@ -114,13 +114,13 @@
 
 (deftest dilation
   (let [bimg (binary-image [2 2] [1 0 0 0])
-        st-el (make-custom-st [1]
+        st-el (structuring-element [1]
                               :origin [0 0]
                               :dimensions [1 1])]
     (is (= (dilate st-el bimg)
            bimg)))
   (let [bimg (binary-image [2 2] [1 0 0 0])
-        st-el (make-custom-st [1 1]
+        st-el (structuring-element [1 1]
                               :origin [0 0]
                               :dimensions [2 1])]
     (is (= (dilate st-el bimg)
@@ -128,7 +128,7 @@
 
 (deftest erosion
   (let [bimg (binary-image [2 2] [1 1 0 0])
-        st-el (make-custom-st [1 1]
+        st-el (structuring-element [1 1]
                               :origin [0 0]
                               :dimensions [2 1])]
     (is (= (erode st-el bimg)
@@ -136,7 +136,7 @@
 
 (deftest closure
   (let [bimg (binary-image [2 2] [1 0 0 0])
-        st-el (make-custom-st [1 1]
+        st-el (structuring-element [1 1]
                               :origin [0 0]
                               :dimensions [2 1])]
     (is (= (close st-el bimg)
@@ -144,7 +144,7 @@
 
 (deftest opening
   (let [bimg (binary-image [2 2] [1 0 0 0])
-        st-el (make-custom-st [1 1]
+        st-el (structuring-element [1 1]
                               :origin [0 0]
                               :dimensions [2 1])]
     (is (= (open st-el bimg)
@@ -168,7 +168,7 @@
                     (0 0 1 1 0 0 0 0)
                     (0 0 0 0 0 0 0 0)))
       bimg (binary-image [8 8] bimg)
-      st-el (make-custom-st [1 1 1
+      st-el (structuring-element [1 1 1
                              1 1 1
                              1 1 1]
                             :origin [1 1]

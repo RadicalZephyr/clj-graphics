@@ -48,7 +48,7 @@
       [(count head)
        (count element)])))
 
-(defn make-custom-st [element & {:keys [dimensions origin]}]
+(defn structuring-element [element & {:keys [dimensions origin]}]
   (let [[w h :as dim] (or dimensions
                           (calculate-dimensions element)
                           (throw (IllegalArgumentException.
@@ -63,7 +63,7 @@
                   (quot h 2)])}))
 
 (defn make-box-st [[w h :as dim] & {:keys [origin]}]
-  (make-custom-st (vec (take (* w h) (repeat 1)))
+  (structuring-element (vec (take (* w h) (repeat 1)))
                   :dimensions dim
                   :origin (or origin
                               [(quot w 2)
@@ -95,14 +95,14 @@
 
 (defn make-disk-st [d & {:keys [origin]}]
   (let [r (quot d 2)]
-    (make-custom-st (make-circle d :filled true)
+    (structuring-element (make-circle d :filled true)
                     :dimensions [d d]
                     :origin (or origin
                                 [r r]))))
 
 (defn make-ring-st [d & {:keys [origin]}]
   (let [r (quot d 2)]
-    (make-custom-st (make-circle d :filled false)
+    (structuring-element (make-circle d :filled false)
                     :dimensions [d d]
                     :origin (or origin
                                 [r r]))))
