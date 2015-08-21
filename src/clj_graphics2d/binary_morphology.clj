@@ -221,6 +221,12 @@
       (update-image-at bimg coords 1)
       (update-image-at bimg coords 0))))
 
+(defn erode [st-el bimg]
+  (->> (for [y (range (height bimg))
+             x (range (width bimg))] [x y])
+       (map #(erode-at st-el bimg %))
+       (reduce min bimg)))
+
 ;; (defn dilate-image [bimg [w h :as dim] st-el]
 ;;   (updating-coll-by [output-img (vec (take (count bimg) (repeat 0)))
 ;;                      pts (for [y (range h)

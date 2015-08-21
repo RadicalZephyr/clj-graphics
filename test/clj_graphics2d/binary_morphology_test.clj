@@ -232,13 +232,27 @@
     (is (= (erode-at st-el bimg [0 0])
            (binary-image [2 1] [0 0])))))
 
-;; (deftest erosion
-;;   (let [bimg (binary-image [2 2] [1 1 0 0])
-;;         st-el (structuring-element [1 1]
-;;                               :origin [0 0]
-;;                               :dimensions [2 1])]
-;;     (is (= (erode st-el bimg)
-;;            (binary-image [2 2] [1 0 0 0])))))
+(deftest erosion
+  (let [st-el (structuring-element [1 1]
+                                   :origin [0 0]
+                                   :dimensions [2 1])
+        bimg (binary-image [2 2] [1 0 1 0])]
+    (is (= (erode st-el bimg)
+           (binary-image [2 2] [0 0 0 0]))))
+
+  (let [st-el (structuring-element [1 1]
+                                   :origin [0 0]
+                                   :dimensions [2 1])
+        bimg (binary-image [4 1] [1 1 0 0])]
+    (is (= (erode st-el bimg)
+           (binary-image [4 1] [1 0 0 0]))))
+
+  (let [st-el (structuring-element [1 1]
+                                   :origin [0 0]
+                                   :dimensions [2 1])
+        bimg (binary-image [2 2] [1 1 1 1])]
+    (is (= (erode st-el bimg)
+           (binary-image [2 2] [1 0 1 0])))))
 
 ;; (deftest closure
 ;;   (let [bimg (binary-image [2 2] [1 0 0 0])
