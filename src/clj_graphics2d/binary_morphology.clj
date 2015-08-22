@@ -218,15 +218,14 @@
 (def-morph-op dilate-at hit?)
 (def-morph-op  erode-at fit?)
 
-(defn dilate [st-el bimg]
-  (->> (for [y (range (height bimg))
-             x (range (width bimg))] [x y])
-       (reduce (partial dilate-at st-el bimg) bimg)))
+(defn make-process-with [at-fn]
+  (fn [st-el bimg]
+    (->> (for [y (range (height bimg))
+               x (range (width bimg))] [x y])
+         (reduce (partial at-fn st-el bimg) bimg))))
 
-(defn erode [st-el bimg]
-  (->> (for [y (range (height bimg))
-             x (range (width bimg))] [x y])
-       (reduce (partial erode-at st-el bimg) bimg)))
+(def dilate (make-process-with dilate-at))
+(def erode  (make-process-with  erode-at))
 
 (defn close [st-el bimg]
   (->> bimg
