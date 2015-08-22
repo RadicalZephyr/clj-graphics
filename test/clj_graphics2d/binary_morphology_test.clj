@@ -86,7 +86,7 @@
     (is (= (height bimg)
            2))
     (is (= (with-out-str (display-image bimg))
-           "1 1\n0 0\n"))))
+           "@ @\n` `\n"))))
 
 (deftest update-image-at-test
   (let [bimg (binary-image [2 2] [0 0 0 0])]

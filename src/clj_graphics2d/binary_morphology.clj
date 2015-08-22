@@ -142,6 +142,7 @@
 
 (defn display-image [binary-image]
   (println (->> (image binary-image)
+                (replace {0 \` 1 \@})
                 (partition (width binary-image))
                 (map #(str/join " " %))
                 (str/join "\n"))))
