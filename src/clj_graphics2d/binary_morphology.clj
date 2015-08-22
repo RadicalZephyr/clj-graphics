@@ -147,6 +147,9 @@
                 (map #(str/join " " %))
                 (str/join "\n"))))
 
+(defn get-in-image [bimg coords]
+  (get2d (width bimg) (image bimg) coords))
+
 (defn update-image-at [bimg coords value]
   (binary-image (dimensions bimg)
                 (assoc2d (width bimg) (image bimg) coords value)))
@@ -169,7 +172,7 @@
 
 (defn extract-kernel [bimg kernel]
   (mapv #(if (is-in-bounds? (dimensions bimg) %)
-           (get2d (width bimg) (image bimg) %)
+           (get-in-image bimg %)
            0)
         kernel))
 
@@ -232,9 +235,7 @@
   (let [kernel (four-kernel-at coords)
         probe  (extract-kernel orig-image kernel)
         probe-stats (frequencies probe)
-        center-bit (get2d (width orig-image)
-                          (image orig-image)
-                          coords)]
+        center-bit (get-in-image orig-image coords)]
     (if (and (= center-bit 1)
              (= probe-stats {0 3 1 1}))
       (update-image-at mod-image coords 0)
