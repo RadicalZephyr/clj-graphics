@@ -125,32 +125,32 @@
         grouped           (group-by #(> (count %) 100)
                                     components-seq)
         border-component  (first (grouped true))
-        words-component   (partition 2 (flatten (grouped false)))]
-    (let [corner-image
-          (util/->interleave iimg (draw-image (get-canvas))
-                             (op/color-convert-image ColorSpace/CS_sRGB)
-                             (color-component words-component Color/BLACK)
-                             (op/color-convert-image ColorSpace/CS_GRAY)
-                             op/invert-image
-                             (op/threshold-image 150))
-          corners (corner/get-all-corners
-                   (util/all-translations corner-image [3 3]))
-          morpho-image (util/->interleave corner-image (draw-image (get-canvas))
-                                          (op/bw-scale-image 2/3)
-                                          (op/bw-scale-image 2/3)
-                                          (op/bw-scale-image 2/3)
-                                          op/invert-image
-                                          (op/color-convert-image ColorSpace/CS_sRGB))
-          thinned-image (util/->interleave morpho-image (draw-image (get-canvas))
-                                           (op/morpho-image bm/thin-lines)
-                                           (op/morpho-image bm/remove-nubs)
-                                           (op/subset-image [2 2] [-2 -1])
-                                           op/invert-image
-                                           (op/color-convert-image ColorSpace/CS_GRAY))]
-      {:img thinned-image
-       :border-component border-component
-       :words-component words-component
-       :corners corners})))
+        words-component   (partition 2 (flatten (grouped false)))
+        corner-image
+        (util/->interleave iimg (draw-image (get-canvas))
+                           (op/color-convert-image ColorSpace/CS_sRGB)
+                           (color-component words-component Color/BLACK)
+                           (op/color-convert-image ColorSpace/CS_GRAY)
+                           op/invert-image
+                           (op/threshold-image 150))
+        corners (corner/get-all-corners
+                 (util/all-translations corner-image [3 3]))
+        morpho-image (util/->interleave corner-image (draw-image (get-canvas))
+                                        (op/bw-scale-image 2/3)
+                                        (op/bw-scale-image 2/3)
+                                        (op/bw-scale-image 2/3)
+                                        op/invert-image
+                                        (op/color-convert-image ColorSpace/CS_sRGB))
+        thinned-image (util/->interleave morpho-image (draw-image (get-canvas))
+                                         (op/morpho-image bm/thin-lines)
+                                         (op/morpho-image bm/remove-nubs)
+                                         (op/subset-image [2 2] [-2 -1])
+                                         op/invert-image
+                                         (op/color-convert-image ColorSpace/CS_GRAY))]
+    {:img thinned-image
+     :border-component border-component
+     :words-component words-component
+     :corners corners}))
 
 (defn do-processing []
   (-main)
