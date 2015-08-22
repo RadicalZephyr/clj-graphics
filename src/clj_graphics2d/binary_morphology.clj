@@ -304,6 +304,8 @@
 
 (defn thin-lines [bimg]
   (let [fat-line-cores (erode sq-se bimg)
-        fat-lines (dilate sq-se fat-line-cores)]
-    (union (difference bimg fat-lines)
-           fat-line-cores)))
+        fat-lines (dilate sq-se fat-line-cores)
+        thincomplete-lines (union (difference bimg fat-lines)
+                                  fat-line-cores)]
+    (union (conditional-dilation vt-ln bimg (vertical-lines thincomplete-lines))
+           (conditional-dilation hz-ln bimg (horizontal-lines thincomplete-lines)))))
