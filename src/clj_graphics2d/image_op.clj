@@ -59,7 +59,9 @@
             pixels (get-all-pixels-binary src)
             w (.getWidth  src)
             h (.getHeight src)]
-        (->> (op (bm/binary-image [w h] pixels))
+        (->> pixels
+             (bm/binary-image [w h])
+             op
              bm/image
              (set-all-pixels-binary dst))))
     (createCompatibleDestImage [this src dest-cm]
