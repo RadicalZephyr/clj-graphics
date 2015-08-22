@@ -1,5 +1,5 @@
 (ns clj-graphics2d.image-op
-  (:require [clj-graphics2d.binary-morphology :refer [get-morphological-op]]
+  (:require [clj-graphics2d.binary-morphology :as bm]
             [clj-graphics2d.util :refer [get-all-pixels-binary
                                          set-all-pixels-binary]])
   (:import (java.awt Rectangle)
@@ -46,34 +46,33 @@
                               nil)]
     (.filter ccop img nil)))
 
-(defn morphological-op [op-key st-el]
-  (let [op (get-morphological-op op-key)]
-    (reify BufferedImageOp
-      (filter [this src dst]
-        (let [dst (or dst
-                      (.createCompatibleDestImage this src nil))
-              pixels (get-all-pixels-binary src)
-              w (.getWidth  src)
-              h (.getHeight src)]
-          (->> st-el
-               (op pixels [w h])
-               (set-all-pixels-binary dst))))
-      (createCompatibleDestImage [this src dest-cm]
-        (let [dest-cm (or dest-cm
-                          (.getColorModel src))
-              w (.getWidth src)
-              h (.getHeight src)]
-          (BufferedImage. dest-cm
-                          (.createCompatibleWritableRaster dest-cm w h)
-                          (.isAlphaPremultiplied dest-cm)
-                          nil)))
-      (getRenderingHints [this]
-        nil)
-      (getBounds2D [this src]
-        (Rectangle. 0 0 (.getWidth src) (.getHeight src)))
-      (getPoint2D [this src-pt dst-pt]
-        (.clone src-pt)))))
+(defn morphological-op [op]
+  (reify BufferedImageOp
+    (filter [this src dst]
+      (let [dst (or dst
+                    (.createCompatibleDestImage this src nil))
+            pixels (get-all-pixels-binary src)
+            w (.getWidth  src)
+            h (.getHeight src)]
+        (->> (op (bm/binary-image [w h] pixels))
+             bm/image
+             (set-all-pixels-binary dst))))
+    (createCompatibleDestImage [this src dest-cm]
+      (let [dest-cm (or dest-cm
+                        (.getColorModel src))
+            w (.getWidth src)
+            h (.getHeight src)]
+        (BufferedImage. dest-cm
+                        (.createCompatibleWritableRaster dest-cm w h)
+                        (.isAlphaPremultiplied dest-cm)
+                        nil)))
+    (getRenderingHints [this]
+      nil)
+    (getBounds2D [this src]
+      (Rectangle. 0 0 (.getWidth src) (.getHeight src)))
+    (getPoint2D [this src-pt dst-pt]
+      (.clone src-pt))))
 
-(defn morpho-image [img op-key st-el]
-  (let [morpho-op (morphological-op op-key st-el)]
+(defn morpho-image [img op]
+  (let [morpho-op (morphological-op op)]
     (.filter morpho-op img nil)))

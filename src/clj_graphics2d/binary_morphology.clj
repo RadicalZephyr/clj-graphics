@@ -265,17 +265,6 @@
          (min bimg
               (close (open (close bimg)))))))
 
-(defn get-morphological-op [op-key]
-  (case op-key
-    :dilate  dilate
-    :erode   erode
-    :open    open
-    :close   close
-    :proper-opening proper-opening
-    :proper-closing proper-closing
-    :automedian-filter automedian-filter
-    identity))
-
 (def vt-ln (structuring-element [1 1 1] :origin [0 1] :dimensions [1 3]))
 (def hz-ln (structuring-element [1 1 1] :origin [1 0] :dimensions [3 1]))
 
