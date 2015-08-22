@@ -268,7 +268,16 @@
 (def vt-ln (structuring-element [1 1 1] :origin [0 1] :dimensions [1 3]))
 (def hz-ln (structuring-element [1 1 1] :origin [1 0] :dimensions [3 1]))
 
-(def sq-se (structuring-element [1 1 1 1 1 1 1 1 1] :dimensions [3 3] :origin [1 1]))
+(def sq2-se-d (structuring-element [1 1 1 1] :dimensions [2 2] :origin [0 0]))
+(def sq2-se-e (structuring-element [1 1 1 1] :dimensions [2 2] :origin [1 1]))
+
+(defn erode-2sq [bimg]
+  (erode sq2-se-e bimg))
+
+(defn dilate-2sq [bimg]
+  (dilate sq2-se-d bimg))
+
+(def sq3-se (structuring-element [1 1 1 1 1 1 1 1 1] :dimensions [3 3] :origin [1 1]))
 
 (def bimg (binary-image [18 13]
                         [0 0 0 1 0 0 0 0 1 1 1 0 0 0 0 0 0 0
@@ -292,9 +301,16 @@
   (open hz-ln bimg))
 
 (defn thin-lines [bimg]
-  (let [fat-line-cores (erode sq-se bimg)
-        fat-lines (dilate sq-se fat-line-cores)
-        thincomplete-lines (union (difference bimg fat-lines)
-                                  fat-line-cores)]
+  (let [fat-line-cores (erode  sq3-se bimg)
+        fat-lines      (dilate sq3-se fat-line-cores)
+        no-fat         (difference bimg fat-lines)
+
+        med-line-cores (erode-2sq no-fat)
+        med-lines      (dilate-2sq med-line-cores)
+        no-fat-med     (difference no-fat med-lines)
+
+        thincomplete-lines (-> no-fat-med
+                               (union fat-line-cores)
+                               (union med-line-cores))]
     (union (conditional-dilation vt-ln bimg (vertical-lines thincomplete-lines))
            (conditional-dilation hz-ln bimg (horizontal-lines thincomplete-lines)))))
