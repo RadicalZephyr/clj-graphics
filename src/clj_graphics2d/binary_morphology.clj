@@ -1,10 +1,9 @@
 (ns clj-graphics2d.binary-morphology
   (:refer-clojure :rename {min core-min
                            max core-max})
-  (:require [clj-graphics2d.util :refer [get2d assoc2d update2d
-                                         updating-coll-by
-                                         with-partials]]
-            [clojure.string :as str]))
+  (:require [clj-graphics2d.util :refer [with-partials]]
+            [clojure.string :as str]
+            [clojure.core.matrix :as m]))
 
 ;; ------------------------------------------------------------
 ;; Run-Length Encoding/Decoding
@@ -50,13 +49,9 @@
 
 (defn structuring-element [element & {:keys [dimensions origin]}]
   (let [[w h :as dim] (or dimensions
-                          (calculate-dimensions element)
                           (throw (IllegalArgumentException.
-                                  (str
-                                   "Must specify the dimensions of the shape, "
-                                   "either by directly passing them or passing "
-                                   "a list of nested collections."))))]
-    {:element (vec element)
+                                  "Must specify the dimensions of the shape.")))]
+    {:element (m/array (partition w element))
      :dimensions dim
      :origin (or origin
                  [(quot w 2)
@@ -108,7 +103,7 @@
                                      [r r]))))
 
 (defn element [structuring-element]
-  (:element structuring-element))
+  (flatten (:element structuring-element)))
 
 (defn origin [structuring-element]
   (:origin structuring-element))
@@ -120,7 +115,11 @@
   (second (origin structuring-element)))
 
 (defn dimensions [element]
-  (:dimensions element))
+  (->> element
+       :element
+       m/shape
+       reverse
+       vec))
 
 (defn width [element]
   (first (dimensions element)))
@@ -133,12 +132,11 @@
 ;; Binary Images
 ;; ------------------------------------------------------------
 
-(defn binary-image [dimensions image]
-  {:image image
-   :dimensions dimensions})
+(defn binary-image [[w h] image]
+  {:element (m/array (partition w image))})
 
 (defn image [bimg]
-  (:image bimg))
+  (flatten (:element bimg)))
 
 (defn display-image [binary-image]
   (println (->> (image binary-image)
@@ -147,12 +145,12 @@
                 (map #(str/join " " %))
                 (str/join "\n"))))
 
-(defn get-in-image [bimg coords]
-  (get2d (width bimg) (image bimg) coords))
+(defn get-in-image [bimg [x y]]
+  (m/mget (:element bimg) y x))
 
-(defn update-image-at [bimg coords value]
-  (binary-image (dimensions bimg)
-                (assoc2d (width bimg) (image bimg) coords value)))
+(defn update-image-at [bimg [x y] value]
+  (assoc bimg :element
+         (m/mset (:element bimg) y x value)))
 
 
 ;; ------------------------------------------------------------
