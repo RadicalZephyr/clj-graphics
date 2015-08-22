@@ -103,7 +103,7 @@
                                      [r r]))))
 
 (defn element [structuring-element]
-  (flatten (:element structuring-element)))
+  (map int (m/to-vector (:element structuring-element))))
 
 (defn origin [structuring-element]
   (:origin structuring-element))
@@ -136,10 +136,11 @@
   {:element (m/array (partition w image))})
 
 (defn image [bimg]
-  (flatten (:element bimg)))
+  (map int (m/to-vector (:element bimg))))
 
 (defn display-image [binary-image]
   (println (->> (image binary-image)
+                (map int)
                 (replace {0 \` 1 \@})
                 (partition (width binary-image))
                 (map #(str/join " " %))
@@ -170,13 +171,13 @@
 
 (defn extract-kernel [bimg kernel]
   (mapv #(if (is-in-bounds? (dimensions bimg) %)
-           (get-in-image bimg %)
+           (int (get-in-image bimg %))
            0)
         kernel))
 
 (defn structure= [st-bit probe-bit]
-  (or (= st-bit 0)
-      (= st-bit probe-bit)))
+  (or (= (int st-bit) 0)
+      (= (int st-bit) (int probe-bit))))
 
 (defn fit? [st-el probe]
   (every? #(apply structure= %) (map vector (element st-el) probe)))
@@ -232,9 +233,9 @@
 (defn remove-nub-at [orig-image mod-image coords]
   (let [kernel (four-kernel-at coords)
         probe  (extract-kernel orig-image kernel)
-        probe-stats (frequencies probe)
+        probe-stats (frequencies (map int probe))
         center-bit (get-in-image orig-image coords)]
-    (if (and (= center-bit 1)
+    (if (and (= (int center-bit) 1)
              (= probe-stats {0 3 1 1}))
       (update-image-at mod-image coords 0)
       mod-image)))
