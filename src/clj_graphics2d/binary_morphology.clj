@@ -267,3 +267,35 @@
     :proper-closing proper-closing
     :automedian-filter automedian-filter
     identity))
+
+(def vt-ln (structuring-element [1 1 1] :origin [0 1] :dimensions [1 3]))
+(def hz-ln (structuring-element [1 1 1] :origin [1 0] :dimensions [3 1]))
+
+(def sq-se (structuring-element [1 1 1 1 1 1 1 1 1] :dimensions [3 3] :origin [1 1]))
+
+(def bimg (binary-image [18 13]
+                        [0 0 0 1 0 0 0 0 1 1 1 0 0 0 0 0 0 0
+                         1 1 1 1 0 0 0 0 1 1 1 0 0 0 0 0 0 0
+                         0 0 0 1 0 0 0 0 1 1 1 1 1 1 1 1 1 1
+                         0 0 0 1 0 0 0 0 1 1 1 1 1 1 1 1 1 1
+                         0 0 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 1
+                         0 0 1 0 0 0 1 1 1 0 0 0 1 0 0 0 0 0
+                         0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0
+                         1 1 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0
+                         0 0 1 1 1 1 1 0 0 0 0 1 1 1 1 1 1 1
+                         0 0 1 1 1 1 1 0 0 0 0 1 1 1 0 0 0 0
+                         0 0 1 1 1 1 1 0 0 0 0 1 1 1 0 0 0 0
+                         0 0 0 0 0 0 1 0 0 0 0 1 1 1 0 0 0 0
+                         0 0 0 0 0 0 1 0 0 0 0 1 1 1 0 0 0 0]))
+
+(defn vertical-lines [bimg]
+  (open vt-ln bimg))
+
+(defn horizontal-lines [bimg]
+  (open hz-ln bimg))
+
+(defn thin-lines [bimg]
+  (let [fat-line-cores (erode sq-se bimg)
+        fat-lines (dilate sq-se fat-line-cores)]
+    (union (difference bimg fat-lines)
+           fat-line-cores)))
