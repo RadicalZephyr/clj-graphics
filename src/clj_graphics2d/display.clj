@@ -109,6 +109,11 @@
   (draw-image img (get-canvas))
   (Thread/sleep time))
 
+(defn img->bimg [img]
+  (bm/binary-image [(.getWidth  img)
+                    (.getHeight img)]
+                   (util/get-all-pixels-binary img)))
+
 (defn process-image [img]
   (let [iimg (util/->interleave img (draw-image (get-canvas))
                                 remove-header
