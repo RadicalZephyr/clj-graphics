@@ -76,7 +76,11 @@
 (defn first-pass [rgbs]
   (let [rgbs (atom rgbs)
         label (atom 0)
-        unions (atom uf/empty-union-find)]
+        unions (atom uf/empty-union-find)
+        next-label!   (fn [] (swap! label inc))
+        mark-pt!      (fn [pt m] (swap! rgbs assoc2d pt m))
+        union-labels! (fn [min-label label]
+                        (swap! unions uf/union label min-label))]
 
     (dorun
      (->> (for [y (range max-y)
@@ -89,12 +93,12 @@
                    (if-let [labels (seq (labels @rgbs pn))]
                      (let [m (apply min labels)]
                        (dorun
-                        (map #(swap! unions uf/union % m)
+                        (map (partial union-labels! m)
                              labels))
-                       (swap! rgbs assoc2d pt m))
+                       (mark-pt! pt m))
                      (do
-                       (swap! label inc)
-                       (swap! rgbs assoc2d pt @label))))))))
+                       (next-label!)
+                       (mark-pt! pt @label))))))))
 
     [@rgbs @unions]))
 
