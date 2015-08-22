@@ -83,3 +83,8 @@
 (defn morpho-image [img op]
   (let [morpho-op (morphological-op op)]
     (.filter morpho-op img nil)))
+
+(defn subset-image [img [ulx uly] [brx bry]]
+  (let [w (+ (.getWidth  img) brx (- ulx))
+        h (+ (.getHeight img) bry (- uly))]
+    (.getSubimage img ulx uly w h)))

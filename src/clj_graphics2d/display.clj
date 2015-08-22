@@ -144,6 +144,7 @@
           thinned-image (util/->interleave morpho-image (draw-image (get-canvas))
                                            (op/morpho-image bm/thin-lines)
                                            (op/morpho-image bm/remove-nubs)
+                                           (op/subset-image [2 2] [-2 -1])
                                            op/invert-image
                                            (op/color-convert-image ColorSpace/CS_GRAY))]
       {:img thinned-image
