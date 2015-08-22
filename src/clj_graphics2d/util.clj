@@ -123,11 +123,12 @@
 (defn get-all-pixels-binary [img]
   (->> img
        get-all-pixels
-       (replace {-16777216 0
-                 -1        1})))
+       (replace {-16777216  0
+                 -603979776 0
+                 -1         1})))
 
 (defn all-translations [img [w h]]
-  (let [rgbs (get-all-pixels img)
+  (let [rgbs (get-all-pixels-binary img)
         img-w (.getWidth  img)
         img-h (.getHeight img)
         get-xy (fn [coll [x y]]
