@@ -46,6 +46,11 @@
                               nil)]
     (.filter ccop img nil)))
 
+(defn bw-scale-image [img scale]
+  (-> img
+      (scale-image scale)
+      (threshold-image 250)))
+
 (defn morphological-op [op]
   (reify BufferedImageOp
     (filter [this src dst]
