@@ -514,3 +514,36 @@
                        0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0
                        0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0
                        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])))))
+
+(deftest remove-nub-at-test
+  (let [bimg (binary-image [3 3]
+                           [0 0 0
+                            0 1 0
+                            0 1 1])]
+    (is (= (partition 3 (image (remove-nub-at bimg bimg [1 1])))
+           (partition 3 [0 0 0
+                         0 0 0
+                         0 1 1]))))
+
+  (let [bimg (binary-image [3 3]
+                           [0 0 0
+                            0 1 1
+                            0 1 0])]
+    (is (= (partition 3 (image (remove-nub-at bimg bimg [1 1])))
+           (partition 3 [0 0 0
+                         0 1 1
+                         0 1 0])))))
+
+(deftest remove-nubs-test
+  (is (= (partition 5 (image (remove-nubs
+                              (binary-image [5 5]
+                                            [0 0 0 0 0
+                                             0 0 1 0 0
+                                             0 1 1 1 1
+                                             0 0 1 0 1
+                                             0 0 1 1 1]))))
+         (partition 5 [0 0 0 0 0
+                       0 0 0 0 0
+                       0 0 1 1 1
+                       0 0 1 0 1
+                       0 0 1 1 1]))))

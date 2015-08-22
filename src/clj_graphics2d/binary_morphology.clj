@@ -224,6 +224,22 @@
 (def-morph-op dilate-at hit?)
 (def-morph-op  erode-at fit?)
 
+(defn four-kernel-at [[x y]]
+  [[x  (dec y)] [(dec x) y]
+   [(inc x) y]  [x  (inc y)]])
+
+(defn remove-nub-at [orig-image mod-image coords]
+  (let [kernel (four-kernel-at coords)
+        probe  (extract-kernel orig-image kernel)
+        probe-stats (frequencies probe)
+        center-bit (get2d (width orig-image)
+                          (image orig-image)
+                          coords)]
+    (if (and (= center-bit 1)
+             (= probe-stats {0 3 1 1}))
+      (update-image-at mod-image coords 0)
+      mod-image)))
+
 (defn make-process-with [at-fn]
   (fn [st-el bimg]
     (->> (for [y (range (height bimg))
@@ -232,6 +248,11 @@
 
 (def dilate (make-process-with dilate-at))
 (def erode  (make-process-with  erode-at))
+
+(defn remove-nubs [bimg]
+  (->> (for [y (range (height bimg))
+             x (range (width bimg))] [x y])
+       (reduce (partial remove-nub-at bimg) bimg)))
 
 (defn conditional-dilation [st-el bimg cimg]
   (loop [prev-img bimg
