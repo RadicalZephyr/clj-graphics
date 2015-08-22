@@ -208,6 +208,11 @@
                               (= g 1))
                         1 0))))
 
+(def difference (partial binary-bit-op
+                         (fn [f g]
+                           (if (= f 1)
+                             (- f g) 0))))
+
 (defmacro def-morph-op [name predicate]
   `(defn ~name [st-el# orig-image# mod-image# coords#]
      (let [kernel# (kernel-at st-el# coords#)
