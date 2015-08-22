@@ -347,6 +347,36 @@
               [0 0 0 0]
               [0 0 0 0]])))
 
+(deftest conditional-dilation-test
+  (let [b (binary-image [10 10]
+                        [0 0 0 0 0 0 0 0 0 0
+                         0 0 1 0 0 0 0 0 0 0
+                         0 1 1 1 0 0 0 1 0 0
+                         0 0 0 0 0 0 0 0 1 0
+                         0 0 0 0 1 0 0 0 0 0
+                         0 0 0 0 1 1 0 0 1 0
+                         0 0 0 1 1 1 1 0 1 0
+                         0 0 0 1 0 0 0 0 1 0
+                         0 0 0 0 0 0 0 1 1 0
+                         0 0 0 0 0 0 0 0 0 0])
+        v (structuring-element [1 1 1] :origin [0 1] :dimensions [1 3])
+        c (erode v b)
+        d (structuring-element [1 1 1
+                                1 1 1
+                                1 1 1] :origin [1 1] :dimensions [3 3])]
+    (is (= (partition 10 (image (conditional-dilation d b c)))
+           (partition 10
+                      [0 0 0 0 0 0 0 0 0 0
+                       0 0 0 0 0 0 0 0 0 0
+                       0 0 0 0 0 0 0 0 0 0
+                       0 0 0 0 0 0 0 0 0 0
+                       0 0 0 0 1 0 0 0 0 0
+                       0 0 0 0 1 1 0 0 1 0
+                       0 0 0 1 1 1 1 0 1 0
+                       0 0 0 1 0 0 0 0 1 0
+                       0 0 0 0 0 0 0 1 1 0
+                       0 0 0 0 0 0 0 0 0 0])))))
+
 (let [bimg (apply (comp vec concat)
                   '((0 0 0 0 0 0 0 0)
                     (1 1 1 1 1 1 1 0)

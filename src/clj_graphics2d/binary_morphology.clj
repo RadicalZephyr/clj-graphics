@@ -233,6 +233,14 @@
 (def dilate (make-process-with dilate-at))
 (def erode  (make-process-with  erode-at))
 
+(defn conditional-dilation [st-el bimg cimg]
+  (loop [prev-img bimg
+         c-img cimg]
+    (if (= prev-img c-img)
+      c-img
+      (recur c-img (intersection bimg
+                                 (dilate st-el c-img))))))
+
 (defn close [st-el bimg]
   (->> bimg
        (dilate st-el)
