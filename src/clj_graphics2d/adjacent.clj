@@ -21,9 +21,14 @@
   adj-dispatcher)
 
 (defmethod adjacent?    :matrix [adjacencies l1 l2]
-  (= 1.0
-     (m/mget adjacencies l1 l2)
-     (m/mget adjacencies l2 l1)))
+  (try
+    (= 1.0
+      (m/mget adjacencies l1 l2)
+      (m/mget adjacencies l2 l1))
+    (catch java.lang.IndexOutOfBoundsException ex
+      (throw (ex-info "Unexpected label value"
+                      {:label-1 l1 :lablel-2 l2}
+                      ex)))))
 
 (defmethod set-adjacent :matrix [adjacencies l1 l2]
   (try
