@@ -61,13 +61,11 @@
                                  :dimensions num-labels)]
     (doseq [y (range height)]
       (doseq [x (range width)]
-        (let [next-pixel (m/mget pixels y x)]
-          (do-update next-pixel)))
+        (do-update (m/mget pixels y x)))
       (reset-state!))
     (reset-state!)
     (doseq [x (range width)]
       (doseq [y (range height)]
-        (let [next-pixel (m/mget pixels y x)]
-          (do-update next-pixel)))
+        (do-update (m/mget pixels y x)))
       (reset-state!))
     @adjacencies))
