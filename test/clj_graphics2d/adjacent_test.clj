@@ -180,15 +180,23 @@
                          [0 0 4 0 0]
                          [0 0 4 0 5]
                          [6 0 0 0 0]])]
-    (is (= (adjacent? (adjacencies pixels) 0 1)
-           (adjacent? (adjacencies pixels) 0 2)
-           (adjacent? (adjacencies pixels) 0 3)
-           (adjacent? (adjacencies pixels) 0 4)
-           (adjacent? (adjacencies pixels) 0 5)
-           (adjacent? (adjacencies pixels) 0 6)
-           false))
     (is (= (adjacent? (adjacencies pixels) 1 2)
            (adjacent? (adjacencies pixels) 1 3)
            (adjacent? (adjacencies pixels) 2 4)
            (adjacent? (adjacencies pixels) 4 5)
-           true))))
+           true))
+    (let [adjs (adjacencies pixels)
+          valid-pairs #{#{1 2}
+                        #{1 3}
+                        #{2 4}
+                        #{4 5}}
+          all-pairs (for [i (range 7)
+                          j (range 7)
+                          :when (not= i j)] #{i j})
+          both-pairs (group-by (comp boolean valid-pairs)
+                               all-pairs)
+          invalid-pairs (get both-pairs false)]
+      (doseq [[i j] (map vec invalid-pairs)]
+        (is (= (adjacent? adjs i j)
+               (adjacent? adjs j i)
+               false))))))
