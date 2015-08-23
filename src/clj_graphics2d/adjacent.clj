@@ -37,8 +37,8 @@
                            current-label next-label))}))
 
 (defn get-unique-labels [pixels]
-  (m/ereduce #(conj %1 (float %2))
-             #{0.0} pixels))
+  (m/ereduce #(conj %1 (int %2))
+             #{0} pixels))
 
 (defn adjacencies [pixels]
   (let [unique-labels (get-unique-labels pixels)
