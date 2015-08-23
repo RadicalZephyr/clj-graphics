@@ -24,6 +24,11 @@
                       {:label-1 l1 :lablel-2 l2}
                       ex)))))
 
+(defmethod set-adjacent :map [adjacencies l1 l2]
+  (-> adjacencies
+      (update-in [l1] conj l2)
+      (update-in [l2] conj l1)))
+
 (defn update-adjacencies [adjacencies zero-count current-label next-label]
   (let [next-label (int next-label)]
     (dosync
