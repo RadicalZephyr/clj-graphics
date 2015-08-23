@@ -37,10 +37,9 @@
                             [ 0  0 -1]])))))
 
 (deftest adjacency-test
-  (is (m/equals (adjacencies (m/array
-                              [[1 1 1]
-                               [1 1 1]
-                               [1 1 1]]))
+  (is (m/equals (adjacencies (m/array [[1 1 1]
+                                       [1 1 1]
+                                       [1 1 1]]))
                 (m/array [[-1  0]
                           [ 0 -1]])))
 
