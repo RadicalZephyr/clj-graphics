@@ -9,27 +9,24 @@
           (m/mutable (m/identity-matrix dimensions))))
 
 (defn set-adjacent [adjacencies l1 l2]
-  (-> adjacencies
-      (m/mset l1 l2 1.0)
-      (m/mset l2 l1 1.0)))
+  (try
+    (-> adjacencies
+       (m/mset l1 l2 1.0)
+       (m/mset l2 l1 1.0))
+    (catch java.lang.ArrayIndexOutOfBoundsException ex
+      (throw (ex-info "Unexpected label value"
+                      {:label-1 l1 :lablel-2 l2}
+                      ex)))))
 
 (defn update-adjacencies [adjacencies zero-count current-label next-label]
   (let [next-label (int next-label)]
     (dosync
      (if (not= next-label 0)
        (do
-         (let [current-label @current-label
-               [height width] (m/shape @adjacencies)]
+         (let [current-label @current-label]
            (when (and (not= current-label next-label)
                       (not= current-label -1)
-                      (>= 1 @zero-count)
-                      (> height current-label)
-                      (> width  current-label)
-                      (> height next-label)
-                      (> width  next-label))
-             (assert (not= 0 current-label) "Current label can't be zero")
-             (assert (not= 0 next-label) "Next label can't be zero")
-
+                      (>= 1 @zero-count))
              (alter adjacencies
                     set-adjacent current-label next-label)))
          (ref-set current-label next-label)
