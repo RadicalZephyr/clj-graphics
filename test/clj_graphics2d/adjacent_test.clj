@@ -4,88 +4,86 @@
             [clojure.core.matrix :as m]))
 
 (deftest update-adjacencies-test
-  (let [adjacencies (ref (basic-adjacencies 3))
-        zero-count  (ref 0)
-        current-label (ref -1)]
-    (is (= (do (update-adjacencies adjacencies zero-count current-label 1)
-               @current-label)
+  (let [{:keys [adjacencies zero-count current-label do-update]}
+        (make-update-adjacencies :initial-label -1)]
+    (is (= (do
+             (do-update 1)
+             @current-label)
            1))
-    (is (m/equals (do (update-adjacencies adjacencies zero-count current-label 1)
-                      @adjacencies)
+    (is (m/equals (do
+                    (do-update 1)
+                    @adjacencies)
                   (basic-adjacencies 3))))
 
-  (let [adjacencies (ref (basic-adjacencies 3))
-        zero-count  (ref 0)
-        current-label (ref 2)]
-    (is (= (do (update-adjacencies adjacencies zero-count current-label 1)
-               @current-label)
+  (let [{:keys [adjacencies zero-count current-label do-update]}
+        (make-update-adjacencies :initial-label 2)]
+    (is (= (do
+             (do-update 1)
+             @current-label)
            1))
-    (is (m/equals (do (update-adjacencies adjacencies zero-count current-label 1)
-                      @adjacencies)
+    (is (m/equals (do
+                    (do-update 1)
+                    @adjacencies)
                   (m/array [[-1  0  0]
                             [ 0 -1  1]
                             [ 0  1 -1]]))))
 
-  (let [adjacencies (ref (basic-adjacencies 3))
-        zero-count  (ref 0)
-        current-label (ref 2)]
+  (let [{:keys [adjacencies zero-count current-label do-update]}
+        (make-update-adjacencies :initial-label 2)]
     (is (= (do
-             (update-adjacencies adjacencies zero-count current-label 0)
+             (do-update 0)
              @current-label)
            2))
-    (is (m/equals (do (update-adjacencies adjacencies zero-count current-label 0)
-                      @adjacencies)
+    (is (m/equals (do
+                    (do-update 0)
+                    @adjacencies)
                   (m/array [[-1  0  0]
                             [ 0 -1  0]
                             [ 0  0 -1]]))))
 
-  (let [adjacencies (ref (basic-adjacencies 3))
-        zero-count  (ref 0)
-        current-label (ref 2)]
+  (let [{:keys [adjacencies zero-count current-label do-update]}
+        (make-update-adjacencies :initial-label 2)]
     (is (= (do
-             (update-adjacencies adjacencies zero-count current-label 0)
-             (update-adjacencies adjacencies zero-count current-label 1)
+             (do-update 0)
+             (do-update 1)
              @current-label)
            1)))
 
-  (let [adjacencies (ref (basic-adjacencies 3))
-        zero-count  (ref 0)
-        current-label (ref 2)]
+  (let [{:keys [adjacencies zero-count current-label do-update]}
+        (make-update-adjacencies :initial-label 2)]
     (is (m/e= (do
-                (update-adjacencies adjacencies zero-count current-label 0)
-                (update-adjacencies adjacencies zero-count current-label 1)
+                (do-update 0)
+                (do-update 1)
                 @adjacencies)
               (m/array [[-1.0  0.0  0.0]
                         [ 0.0 -1.0  1.0]
                         [ 0.0  1.0 -1.0]]))))
 
-  (let [adjacencies (ref (basic-adjacencies 3))
-        zero-count  (ref 0)
-        current-label (ref 2)]
+  (let [{:keys [adjacencies zero-count current-label do-update]}
+        (make-update-adjacencies :initial-label 2)]
     (is (m/e= (do
-                (update-adjacencies adjacencies zero-count current-label 0)
-                (update-adjacencies adjacencies zero-count current-label 0)
-                (update-adjacencies adjacencies zero-count current-label 1)
+                (do-update 0)
+                (do-update 0)
+                (do-update 1)
                 @current-label)
               1))
     (is (m/e= (do
-                (update-adjacencies adjacencies zero-count current-label 0)
-                (update-adjacencies adjacencies zero-count current-label 0)
-                (update-adjacencies adjacencies zero-count current-label 1)
+                (do-update 0)
+                (do-update 0)
+                (do-update 1)
                 @adjacencies)
               (m/array [[-1.0  0.0  0.0]
                         [ 0.0 -1.0  0.0]
                         [ 0.0  0.0 -1.0]]))))
 
-  (let [adjacencies (ref (basic-adjacencies 3))
-        zero-count  (ref 0)
-        current-label (ref 2)]
+  (let [{:keys [adjacencies zero-count current-label do-update]}
+        (make-update-adjacencies :initial-label 2)]
     (is (m/e= (do
-                (update-adjacencies adjacencies zero-count current-label 0)
-                (update-adjacencies adjacencies zero-count current-label 0)
-                (update-adjacencies adjacencies zero-count current-label 1)
-                (update-adjacencies adjacencies zero-count current-label 0)
-                (update-adjacencies adjacencies zero-count current-label 2)
+                (do-update 0)
+                (do-update 0)
+                (do-update 1)
+                (do-update 0)
+                (do-update 2)
                 @adjacencies)
               (m/array [[-1.0  0.0  0.0]
                         [ 0.0 -1.0  1.0]

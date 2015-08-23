@@ -24,6 +24,18 @@
        (ref-set zero-count 0))
      (alter zero-count inc))))
 
+(defn make-update-adjacencies [& {first-label :initial-label}]
+  (let [adjacencies (ref (basic-adjacencies 3))
+        zero-count  (ref 0)
+        current-label (ref first-label)]
+    {:adjacencies adjacencies
+     :zero-count zero-count
+     :current-label current-label
+     :do-update
+     (fn [next-label]
+       (update-adjacencies adjacencies zero-count
+                           current-label next-label))}))
+
 (defn get-unique-labels [pixels]
   (m/ereduce #(conj %1 (float %2))
              #{0.0} pixels))
