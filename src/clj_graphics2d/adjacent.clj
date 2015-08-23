@@ -40,6 +40,7 @@
     {:adjacencies adjacencies
      :zero-count zero-count
      :current-label current-label
+     :reset-state! (fn [] (dosync (ref-set current-label -1)))
      :do-update
      (fn [next-label]
        (update-adjacencies adjacencies zero-count
@@ -54,11 +55,17 @@
         num-labels    (count unique-labels)
         [height width] (m/shape pixels)
 
-        {:keys [adjacencies zero-count current-label do-update]}
+        {:keys [adjacencies zero-count current-label
+                do-update reset-state!]}
         (make-update-adjacencies :initial-label -1
                                  :dimensions num-labels)]
     (doseq [y (range height)]
       (doseq [x (range width)]
+        (let [next-pixel (m/mget pixels y x)]
+          (do-update next-pixel))))
+    (reset-state!)
+    (doseq [x (range width)]
+      (doseq [y (range height)]
         (let [next-pixel (m/mget pixels y x)]
           (do-update next-pixel))))
     @adjacencies))
