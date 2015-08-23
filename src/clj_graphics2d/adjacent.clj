@@ -8,11 +8,22 @@
              (- %) %)
           (m/mutable (m/identity-matrix dimensions))))
 
+(defn adj-dispatcher [adj _ _]
+  (cond (m/matrix? adj) :matrix
+        (map? adj)      :map))
+
+(defmulti adjacent?
+  "Predicate to determine if two labels are adjacent."
+  adj-dispatcher)
+
 (defmulti set-adjacent
   "Set two labels to be adjacent."
-  (fn [obj _ _]
-    (cond (m/matrix? obj) :matrix
-          (map? obj)      :map)))
+  adj-dispatcher)
+
+(defmethod adjacent?    :matrix [adjacencies l1 l2]
+  (= 1.0
+     (m/mget adjacencies l1 l2)
+     (m/mget adjacencies l2 l1)))
 
 (defmethod set-adjacent :matrix [adjacencies l1 l2]
   (try
@@ -23,6 +34,10 @@
       (throw (ex-info "Unexpected label value"
                       {:label-1 l1 :lablel-2 l2}
                       ex)))))
+
+(defmethod adjacent?    :map [adjacencies l1 l2]
+  (and (contains? (adjacencies l1) l2)
+       (contains? (adjacencies l2) l1)))
 
 (defmethod set-adjacent :map [adjacencies l1 l2]
   (-> adjacencies

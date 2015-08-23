@@ -3,6 +3,25 @@
             [clojure.test :refer :all]
             [clojure.core.matrix :as m]))
 
+(deftest adjacent?-test
+  (testing "PersistentMap"
+   (is (= (adjacent? {} 1 2)
+          false))
+   (is (= (adjacent? {1 [2]
+                      2 [1]} 1 2)
+          false)))
+  (testing "Matrix"
+    (is (= (adjacent? (m/array [[-1  0  0]
+                                [ 0 -1  0]
+                                [ 0  0 -1]])
+                      1 2)
+           false))
+    (is (= (adjacent? (m/array [[-1  0  0]
+                                [ 0 -1  1]
+                                [ 0  1 -1]])
+                      1 2)
+           true))))
+
 (deftest update-adjacencies-test
   (let [{:keys [adjacencies zero-count current-label do-update]}
         (make-update-adjacencies :initial-label -1 :dimensions 2)]
