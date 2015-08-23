@@ -18,20 +18,20 @@
     (dosync
      (if (not= next-label 0)
        (do
-         (let [cl @current-label
+         (let [current-label @current-label
                [height width] (m/shape @adjacencies)]
-           (when (and (not= cl next-label)
-                      (not= cl -1)
+           (when (and (not= current-label next-label)
+                      (not= current-label -1)
                       (>= 1 @zero-count)
-                      (> height cl)
-                      (> width  cl)
+                      (> height current-label)
+                      (> width  current-label)
                       (> height next-label)
                       (> width  next-label))
-             (assert (not= 0 cl) "Current label can't be zero")
+             (assert (not= 0 current-label) "Current label can't be zero")
              (assert (not= 0 next-label) "Next label can't be zero")
 
              (alter adjacencies
-                    set-adjacent cl next-label)))
+                    set-adjacent current-label next-label)))
          (ref-set current-label next-label)
          (ref-set zero-count 0))
        (alter zero-count inc)))))
