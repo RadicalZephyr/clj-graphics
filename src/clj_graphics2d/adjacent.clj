@@ -20,7 +20,8 @@
                   #(-> %
                        (m/mset cl next-label 1.0)
                        (m/mset next-label cl 1.0)))))
-       (ref-set current-label next-label))
+       (ref-set current-label next-label)
+       (ref-set zero-count 0))
      (alter zero-count inc))))
 
 (defn get-unique-labels [pixels]

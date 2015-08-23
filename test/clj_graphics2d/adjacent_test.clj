@@ -66,10 +66,30 @@
                 (update-adjacencies adjacencies zero-count current-label 0)
                 (update-adjacencies adjacencies zero-count current-label 0)
                 (update-adjacencies adjacencies zero-count current-label 1)
+                @current-label)
+              1))
+    (is (m/e= (do
+                (update-adjacencies adjacencies zero-count current-label 0)
+                (update-adjacencies adjacencies zero-count current-label 0)
+                (update-adjacencies adjacencies zero-count current-label 1)
                 @adjacencies)
               (m/array [[-1.0  0.0  0.0]
                         [ 0.0 -1.0  0.0]
-                        [ 0.0  0.0 -1.0]])))))
+                        [ 0.0  0.0 -1.0]]))))
+
+  (let [adjacencies (ref (basic-adjacencies 3))
+        zero-count  (ref 0)
+        current-label (ref 2)]
+    (is (m/e= (do
+                (update-adjacencies adjacencies zero-count current-label 0)
+                (update-adjacencies adjacencies zero-count current-label 0)
+                (update-adjacencies adjacencies zero-count current-label 1)
+                (update-adjacencies adjacencies zero-count current-label 0)
+                (update-adjacencies adjacencies zero-count current-label 2)
+                @adjacencies)
+              (m/array [[-1.0  0.0  0.0]
+                        [ 0.0 -1.0  1.0]
+                        [ 0.0  1.0 -1.0]])))))
 
 (deftest adjacency-test
   (is (m/equals (adjacencies (m/array [[1 1 1]
