@@ -41,13 +41,15 @@
                       ex)))))
 
 (defmethod adjacent?    :map [adjacencies l1 l2]
-  (and (contains? (adjacencies l1) l2)
-       (contains? (adjacencies l2) l1)))
+  (boolean
+   (and (some #{l2} (get adjacencies l1 []))
+        (some #{l1} (get adjacencies l2 [])))))
 
 (defmethod set-adjacent :map [adjacencies l1 l2]
-  (-> adjacencies
-      (update-in [l1] conj l2)
-      (update-in [l2] conj l1)))
+  (let [append-label #(conj (vec %1) %2)]
+    (-> adjacencies
+        (update-in [l1] append-label l2)
+        (update-in [l2] append-label l1))))
 
 (defn update-adjacencies [adjacencies zero-count current-label next-label]
   (let [next-label (int next-label)]

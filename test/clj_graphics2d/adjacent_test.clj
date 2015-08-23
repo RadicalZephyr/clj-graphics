@@ -5,11 +5,16 @@
 
 (deftest adjacent?-test
   (testing "PersistentMap"
-   (is (= (adjacent? {} 1 2)
-          false))
-   (is (= (adjacent? {1 [2]
-                      2 [1]} 1 2)
-          false)))
+    (is (= (adjacent? {} 1 2)
+           false))
+    (is (= (adjacent? {1 [2]
+                       2 [1]} 1 2)
+           true))
+    (is (= (-> {}
+               (set-adjacent 1 2)
+               (adjacent? 1 2))
+           true)))
+
   (testing "Matrix"
     (is (= (adjacent? (m/array [[-1  0  0]
                                 [ 0 -1  0]
