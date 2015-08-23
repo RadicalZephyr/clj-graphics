@@ -8,11 +8,17 @@
              (- %) %)
           (m/mutable (m/identity-matrix dimensions))))
 
-(defn set-adjacent [adjacencies l1 l2]
+(defmulti set-adjacent
+  "Set two labels to be adjacent."
+  (fn [obj _ _]
+    (cond (m/matrix? obj) :matrix
+          (map? obj)      :map)))
+
+(defmethod set-adjacent :matrix [adjacencies l1 l2]
   (try
     (-> adjacencies
-       (m/mset l1 l2 1.0)
-       (m/mset l2 l1 1.0))
+        (m/mset l1 l2 1.0)
+        (m/mset l2 l1 1.0))
     (catch java.lang.ArrayIndexOutOfBoundsException ex
       (throw (ex-info "Unexpected label value"
                       {:label-1 l1 :lablel-2 l2}
