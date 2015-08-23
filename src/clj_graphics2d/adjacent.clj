@@ -13,10 +13,15 @@
     (dosync
      (if (not= next-label 0)
        (do
-         (let [cl @current-label]
+         (let [cl @current-label
+               [height width] (m/shape @adjacencies)]
            (when (and (not= cl next-label)
                       (not= cl -1)
-                      (>= 1 @zero-count))
+                      (>= 1 @zero-count)
+                      (> height cl)
+                      (> width  cl)
+                      (> height next-label)
+                      (> width  next-label))
              (assert (not= 0 cl) "Current label can't be zero")
              (assert (not= 0 next-label) "Next label can't be zero")
 

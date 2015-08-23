@@ -5,6 +5,17 @@
 
 (deftest update-adjacencies-test
   (let [{:keys [adjacencies zero-count current-label do-update]}
+        (make-update-adjacencies :initial-label -1 :dimensions 2)]
+    (do-update 2)
+    (do-update 1)
+
+    (is (= @current-label
+           1))
+    (is (m/equals @adjacencies
+                  (m/array [[-1  0]
+                            [ 0 -1]]))))
+
+  (let [{:keys [adjacencies zero-count current-label do-update]}
         (make-update-adjacencies :initial-label -1 :dimensions 3)]
     (do-update 1)
 
