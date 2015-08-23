@@ -103,7 +103,7 @@
                                      [r r]))))
 
 (defn element [structuring-element]
-  (map int (m/to-vector (:element structuring-element))))
+  (map int (m/eseq (:element structuring-element))))
 
 (defn origin [structuring-element]
   (:origin structuring-element))
@@ -136,7 +136,7 @@
   {:element (m/array (partition w image))})
 
 (defn image [bimg]
-  (map int (m/to-vector (:element bimg))))
+  (map int (m/eseq (:element bimg))))
 
 (defn display-image [binary-image]
   (println (->> (image binary-image)
