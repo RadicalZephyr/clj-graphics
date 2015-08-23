@@ -32,6 +32,10 @@
         (make-update-adjacencies :initial-label 2)]
     (is (= (do
              (do-update 0)
+             @zero-count)
+           1))
+    (is (= (do
+             (do-update 0)
              @current-label)
            2))
     (is (m/equals (do
