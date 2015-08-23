@@ -75,7 +75,23 @@
     (is (m/e= @adjacencies
               (m/array [[-1.0  0.0  0.0]
                         [ 0.0 -1.0  1.0]
-                        [ 0.0  1.0 -1.0]])))))
+                        [ 0.0  1.0 -1.0]]))))
+
+  (let [{:keys [adjacencies zero-count current-label do-update]}
+        (make-update-adjacencies :initial-label -1 :dimensions 3)]
+    (do-update 1.0)
+    (do-update 0.0)
+    (do-update 0.0)
+    (do-update 0.0)
+    (do-update 0.0)
+    (do-update 0.0)
+    (do-update 0.0)
+    (do-update 2.0)
+
+    (is (m/e= @adjacencies
+              (m/array [[-1.0  0.0  0.0]
+                        [ 0.0 -1.0  0.0]
+                        [ 0.0  0.0 -1.0]])))))
 
 (deftest get-unique-labels-test
   (is (= (get-unique-labels (m/array [[1 1 1]

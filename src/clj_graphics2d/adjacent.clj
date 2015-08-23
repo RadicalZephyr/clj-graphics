@@ -9,20 +9,24 @@
           (m/mutable (m/identity-matrix dimensions))))
 
 (defn update-adjacencies [adjacencies zero-count current-label next-label]
-  (dosync
-   (if (not= next-label 0)
-     (do
-       (let [cl @current-label]
-         (when (and (not= cl next-label)
-                    (not= cl -1)
-                    (>= 1 @zero-count))
-           (alter adjacencies
-                  #(-> %
-                       (m/mset cl next-label 1.0)
-                       (m/mset next-label cl 1.0)))))
-       (ref-set current-label next-label)
-       (ref-set zero-count 0))
-     (alter zero-count inc))))
+  (let [next-label (int next-label)]
+    (dosync
+     (if (not= next-label 0)
+       (do
+         (let [cl @current-label]
+           (when (and (not= cl next-label)
+                      (not= cl -1)
+                      (>= 1 @zero-count))
+             (assert (not= 0 cl) "Current label can't be zero")
+             (assert (not= 0 next-label) "Next label can't be zero")
+
+             (alter adjacencies
+                    #(-> %
+                         (m/mset cl next-label 1.0)
+                         (m/mset next-label cl 1.0)))))
+         (ref-set current-label next-label)
+         (ref-set zero-count 0))
+       (alter zero-count inc)))))
 
 (defn make-update-adjacencies [& {:keys [initial-label dimensions]}]
   (let [adjacencies (ref (basic-adjacencies dimensions))
