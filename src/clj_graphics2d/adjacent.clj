@@ -24,10 +24,10 @@
        (ref-set zero-count 0))
      (alter zero-count inc))))
 
-(defn make-update-adjacencies [& {first-label :initial-label}]
-  (let [adjacencies (ref (basic-adjacencies 3))
+(defn make-update-adjacencies [& {:keys [initial-label dimensions]}]
+  (let [adjacencies (ref (basic-adjacencies dimensions))
         zero-count  (ref 0)
-        current-label (ref first-label)]
+        current-label (ref initial-label)]
     {:adjacencies adjacencies
      :zero-count zero-count
      :current-label current-label
