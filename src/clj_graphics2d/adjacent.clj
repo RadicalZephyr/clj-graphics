@@ -8,13 +8,14 @@
 
 (defn update-adjacencies [adjacencies current-label next-label]
   (dosync
-   (let [cl @current-label]
-     (if (and (not= cl next-label)
-          (not= cl -1))
-       (alter adjacencies #(-> %
-                               (m/mset cl next-label 1.0)
-                               (m/mset next-label cl 1.0)))))
-   (ref-set current-label next-label)))
+   (when (not= next-label 0)
+     (let [cl @current-label]
+       (if (and (not= cl next-label)
+                (not= cl -1))
+         (alter adjacencies #(-> %
+                                 (m/mset cl next-label 1.0)
+                                 (m/mset next-label cl 1.0)))))
+     (ref-set current-label next-label))))
 
 (defn adjacencies [pixels]
   (let [unique-labels (distinct (conj (m/to-vector pixels) 0))
