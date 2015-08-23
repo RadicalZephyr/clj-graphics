@@ -8,6 +8,11 @@
              (- %) %)
           (m/mutable (m/identity-matrix dimensions))))
 
+(defn set-adjacent [adjacencies l1 l2]
+  (-> adjacencies
+      (m/mset l1 l2 1.0)
+      (m/mset l2 l1 1.0)))
+
 (defn update-adjacencies [adjacencies zero-count current-label next-label]
   (let [next-label (int next-label)]
     (dosync
@@ -26,9 +31,7 @@
              (assert (not= 0 next-label) "Next label can't be zero")
 
              (alter adjacencies
-                    #(-> %
-                         (m/mset cl next-label 1.0)
-                         (m/mset next-label cl 1.0)))))
+                    set-adjacent cl next-label)))
          (ref-set current-label next-label)
          (ref-set zero-count 0))
        (alter zero-count inc)))))
