@@ -8,17 +8,20 @@
              (- %) %)
           (m/mutable (m/identity-matrix dimensions))))
 
-(defn update-adjacencies [adjacencies current-label next-label]
+(defn update-adjacencies [adjacencies zero-count current-label next-label]
   (dosync
-   (when (not= next-label 0)
-     (let [cl @current-label]
-       (when (and (not= cl next-label)
-                  (not= cl -1))
-         (alter adjacencies
-                #(-> %
-                     (m/mset cl next-label 1.0)
-                     (m/mset next-label cl 1.0)))))
-     (ref-set current-label next-label))))
+   (if (not= next-label 0)
+     (do
+       (let [cl @current-label]
+         (when (and (not= cl next-label)
+                    (not= cl -1)
+                    (>= 1 @zero-count))
+           (alter adjacencies
+                  #(-> %
+                       (m/mset cl next-label 1.0)
+                       (m/mset next-label cl 1.0)))))
+       (ref-set current-label next-label))
+     (alter zero-count inc))))
 
 (defn get-unique-labels [pixels]
   (m/ereduce #(conj %1 (float %2))
