@@ -134,9 +134,9 @@
                           [ 0 -1  0]
                           [ 0  0 -1]])))
 
-  #_(is (= (adjacencies (m/array [[1 0 2]
+  (is (= (adjacencies (m/array [[1 0 2]
                                 [1 0 2]
                                 [1 0 2]]))
-         (-> (basic-adjacencies 3)
-             (m/mset 1 2 1)
-             (m/mset 2 1 1)))))
+         (m/array [[-1  0  0]
+                   [ 0 -1  1]
+                   [ 0  1 -1]]))))

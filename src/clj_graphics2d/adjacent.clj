@@ -53,5 +53,12 @@
   (let [unique-labels (get-unique-labels pixels)
         num-labels    (count unique-labels)
         [height width] (m/shape pixels)
-        adjacencies (basic-adjacencies num-labels)]
-    adjacencies))
+
+        {:keys [adjacencies zero-count current-label do-update]}
+        (make-update-adjacencies :initial-label -1
+                                 :dimensions num-labels)]
+    (doseq [y (range height)]
+      (doseq [x (range width)]
+        (let [next-pixel (m/mget pixels y x)]
+          (do-update next-pixel))))
+    @adjacencies))
