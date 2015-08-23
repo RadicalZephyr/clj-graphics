@@ -41,10 +41,14 @@
 
     (is (= @current-label
            1))
-    (is (m/equals @adjacencies
-                  (m/array [[-1  0  0]
-                            [ 0 -1  0]
-                            [ 0  0 -1]]))))
+    (is (= (adjacent? @adjacencies 0 1)
+           false))
+    (is (= (adjacent? @adjacencies 1 0)
+           false))
+    (is (= (adjacent? @adjacencies 1 2)
+           false))
+    (is (= (adjacent? @adjacencies 2 1)
+           false)))
 
   (let [{:keys [adjacencies zero-count current-label do-update]}
         (make-update-adjacencies :initial-label 2 :dimensions 3)]
@@ -52,10 +56,8 @@
 
     (is (= @current-label
            1))
-    (is (m/equals @adjacencies
-                  (m/array [[-1  0  0]
-                            [ 0 -1  1]
-                            [ 0  1 -1]]))))
+    (is (= (adjacent? @adjacencies 1 2)
+           true)))
 
   (let [{:keys [adjacencies zero-count current-label do-update]}
         (make-update-adjacencies :initial-label 2 :dimensions 3)]
@@ -65,10 +67,8 @@
            1))
     (is (= @current-label
            2))
-    (is (m/equals @adjacencies
-                  (m/array [[-1  0  0]
-                            [ 0 -1  0]
-                            [ 0  0 -1]]))))
+    (is (= (adjacent? @adjacencies 1 2)
+           false)))
 
   (let [{:keys [adjacencies zero-count current-label do-update]}
         (make-update-adjacencies :initial-label 2 :dimensions 3)]
@@ -77,10 +77,8 @@
 
     (is (= @current-label
            1))
-    (is (m/e= @adjacencies
-              (m/array [[-1.0  0.0  0.0]
-                        [ 0.0 -1.0  1.0]
-                        [ 0.0  1.0 -1.0]]))))
+    (is (= (adjacent? @adjacencies 1 2)
+           true)))
 
   (let [{:keys [adjacencies zero-count current-label do-update]}
         (make-update-adjacencies :initial-label 2 :dimensions 3)]
@@ -90,10 +88,8 @@
 
     (is (m/e= @current-label
               1))
-    (is (m/e= @adjacencies
-              (m/array [[-1.0  0.0  0.0]
-                        [ 0.0 -1.0  0.0]
-                        [ 0.0  0.0 -1.0]]))))
+    (is (= (adjacent? @adjacencies 1 2)
+           false)))
 
   (let [{:keys [adjacencies zero-count current-label do-update]}
         (make-update-adjacencies :initial-label 2 :dimensions 3)]
@@ -103,10 +99,8 @@
     (do-update 0)
     (do-update 2)
 
-    (is (m/e= @adjacencies
-              (m/array [[-1.0  0.0  0.0]
-                        [ 0.0 -1.0  1.0]
-                        [ 0.0  1.0 -1.0]]))))
+    (is (= (adjacent? @adjacencies 1 2)
+           true)))
 
   (let [{:keys [adjacencies zero-count current-label do-update]}
         (make-update-adjacencies :initial-label -1 :dimensions 3)]
@@ -119,10 +113,8 @@
     (do-update 0.0)
     (do-update 2.0)
 
-    (is (m/e= @adjacencies
-              (m/array [[-1.0  0.0  0.0]
-                        [ 0.0 -1.0  0.0]
-                        [ 0.0  0.0 -1.0]])))))
+    (is (= (adjacent? @adjacencies 1 2)
+           false))))
 
 (deftest get-unique-labels-test
   (is (= (get-unique-labels (m/array [[1 1 1]
@@ -141,55 +133,62 @@
          #{0 1 2 3})))
 
 (deftest adjacency-test
-  (is (m/equals (adjacencies (m/array [[1 1 1]
-                                       [1 1 1]
-                                       [1 1 1]]))
-                (m/array [[-1  0]
-                          [ 0 -1]])))
+  (is (= (adjacent? (adjacencies (m/array [[1 1 1]
+                                         [1 1 1]
+                                         [1 1 1]]))
+                    0 1)
+         false))
 
-  (is (m/equals (adjacencies (m/array [[1 0 0]
-                                       [0 0 0]
-                                       [0 0 2]]))
-                (m/array [[-1  0  0]
-                          [ 0 -1  0]
-                          [ 0  0 -1]])))
+  (let [pixels (m/array [[1 0 0]
+                         [0 0 0]
+                         [0 0 2]])]
+    (is (= (adjacent? (adjacencies pixels) 0 1)
+           (adjacent? (adjacencies pixels) 1 2)
+           false)))
 
-  (is (= (adjacencies (m/array [[1 0 2]
-                                [1 0 2]
-                                [1 0 2]]))
-         (m/array [[-1  0  0]
-                   [ 0 -1  1]
-                   [ 0  1 -1]])))
+  (let [pixels (m/array [[1 0 2]
+                         [1 0 2]
+                         [1 0 2]])]
+    (is (= (adjacent? (adjacencies pixels) 0 1)
+           false))
+    (is (= (adjacent? (adjacencies pixels) 1 2)
+           true)))
 
-  (is (= (adjacencies (m/array [[1 1 1]
-                                [0 0 0]
-                                [2 2 2]]))
-         (m/array [[-1  0  0]
-                   [ 0 -1  1]
-                   [ 0  1 -1]])))
+  (let [pixels (m/array  [[1 1 1]
+                          [0 0 0]
+                          [2 2 2]])]
+    (is (= (adjacent? (adjacencies pixels) 0 1)
+           false))
+    (is (= (adjacent? (adjacencies pixels) 1 2)
+           true)))
 
-  (is (= (adjacencies (m/array [[0 0 1]
-                                [2 0 0]]))
-         (m/array [[-1  0  0]
-                   [ 0 -1  0]
-                   [ 0  0 -1]])))
+  (let [pixels (m/array [[0 0 1]
+                         [2 0 0]])]
+    (is (= (adjacent? (adjacencies pixels) 0 1)
+           (adjacent? (adjacencies pixels) 1 2)
+           false)))
 
-  (is (= (adjacencies (m/array [[0 1]
-                                [0 0]
-                                [2 0]]))
-         (m/array [[-1  0  0]
-                   [ 0 -1  0]
-                   [ 0  0 -1]])))
+  (let [pixels (m/array  [[0 1]
+                          [0 0]
+                          [2 0]])]
+    (is (= (adjacent? (adjacencies pixels) 0 1)
+           (adjacent? (adjacencies pixels) 1 2)
+           false)))
 
-  (is (= (adjacencies (m/array [[1 0 2 0 0]
-                                [3 0 0 0 0]
-                                [0 0 4 0 0]
-                                [0 0 4 0 5]
-                                [6 0 0 0 0]]))
-         (m/array [[-1  0  0  0  0  0  0]
-                   [ 0 -1  1  1  0  0  0]
-                   [ 0  1 -1  0  1  0  0]
-                   [ 0  1  0 -1  0  0  0]
-                   [ 0  0  1  0 -1  1  0]
-                   [ 0  0  0  0  1 -1  0]
-                   [ 0  0  0  0  0  0 -1]]))))
+  (let [pixels (m/array [[1 0 2 0 0]
+                         [3 0 0 0 0]
+                         [0 0 4 0 0]
+                         [0 0 4 0 5]
+                         [6 0 0 0 0]])]
+    (is (= (adjacent? (adjacencies pixels) 0 1)
+           (adjacent? (adjacencies pixels) 0 2)
+           (adjacent? (adjacencies pixels) 0 3)
+           (adjacent? (adjacencies pixels) 0 4)
+           (adjacent? (adjacencies pixels) 0 5)
+           (adjacent? (adjacencies pixels) 0 6)
+           false))
+    (is (= (adjacent? (adjacencies pixels) 1 2)
+           (adjacent? (adjacencies pixels) 1 3)
+           (adjacent? (adjacencies pixels) 2 4)
+           (adjacent? (adjacencies pixels) 4 5)
+           true))))
