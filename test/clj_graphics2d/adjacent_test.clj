@@ -8,9 +8,9 @@
                        [[1 1 1]
                         [1 1 1]
                         [1 1 1]]))
-         (m/identity-matrix 1)))
+         (basic-adjacencies 2)))
 
   (is (= (adjacencies (m/array [[1 0 0]
                                 [0 0 0]
                                 [0 0 2]]))
-         (m/identity-matrix 2))))
+         (basic-adjacencies 3))))
