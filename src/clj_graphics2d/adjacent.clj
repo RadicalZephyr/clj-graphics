@@ -4,9 +4,11 @@
 (m/set-current-implementation :vectorz)
 
 (defn basic-adjacencies [dimensions]
-  (m/emap #(if (= 1.0 %)
-             (- %) %)
-          (m/mutable (m/identity-matrix dimensions))))
+  (m/sparse-matrix
+   (m/emap #(if (= 1.0 %)
+              (- %) %)
+           (m/mutable
+            (m/identity-matrix dimensions)))))
 
 (defn adj-dispatcher [adj _ _]
   (cond (m/matrix? adj) :matrix
@@ -23,8 +25,8 @@
 (defmethod adjacent?    :matrix [adjacencies l1 l2]
   (try
     (= 1.0
-      (m/mget adjacencies l1 l2)
-      (m/mget adjacencies l2 l1))
+       (m/mget adjacencies l1 l2)
+       (m/mget adjacencies l2 l1))
     (catch java.lang.IndexOutOfBoundsException ex
       (throw (ex-info "Unexpected label value"
                       {:label-1 l1 :lablel-2 l2}
